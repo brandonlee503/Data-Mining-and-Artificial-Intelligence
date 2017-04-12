@@ -1,4 +1,5 @@
 import numpy as np
+import random
 np.set_printoptions(threshold=np.inf)
 np.set_printoptions(precision=4)
 
@@ -81,7 +82,15 @@ def main():
         print compSSE(x_test, y_test, w_test)
 
 
+def generateDummy(arrLen):
+    dummy = [0] * arrLen
+    for i, value in enumerate(dummy):
+        coinflip = random.randint(0, 1)
+        if coinflip:
+            dummy[i] = random.randint(0, 500)
 
+    foo = np.asarray(dummy)[np.newaxis]
+    return foo.T
 
 
 def compute_w(x,y):
