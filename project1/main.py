@@ -8,10 +8,12 @@ def main():
     # y_test = np.loadtxt(open("housing_test.txt", "rb"), delimiter=" ", usecols = [13])
 
     print "Training W: "
-    print compute_w(x_train, y_train)
+    w = compute_w(x_train, y_train)
+    print w
 
     # print "Testing W: "
     # print compute_w(x_test, y_test)
+    print compSSE(x_train, y_train, w)
 
 
 
@@ -23,6 +25,13 @@ def compute_w(x,y):
 
     w = np.matmul(xTx_inverse, xTy)
     return w
+
+def compSSE(x, y, w):
+    ### compute SSE
+    e1 = np.transpose(y - np.matmul(x, w))
+    e2 = y - np.matmul(x, w)
+    e3 = np.matmul(e1, e2)
+    return e3
 
 if __name__ == '__main__':
     main()
