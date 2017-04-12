@@ -33,7 +33,7 @@ def main():
     ### part 3 -- compute SSE
     print "Training SSE: "
     print compSSE(x_train, y_train, w_train)
-    print "Training SSE: "
+    print "Test SSE: "
     print compSSE(x_test, y_test, w_test)
 
 
@@ -52,7 +52,7 @@ def main():
     ### compute SSE
     print "Training SSE: "
     print compSSE(inputArr, y_train, w_train_wo_dummy)
-    print "Training SSE: "
+    print "Test SSE: "
     print compSSE(inputArr2, y_test, w_test_wo_dummy)
 
 
