@@ -19,7 +19,9 @@ def main():
     x_test = np.concatenate((ones_2, inputArr2), axis=1)
     y_test = np.loadtxt(open("housing_test.txt", "rb"), delimiter=" ", usecols = [13])
 
-
+    print
+    print " ---- With dummy ones ----"
+    print
     ### Part 2 - compute optimal weight vector w
     print "Training W: "
     w_train = compute_w(x_train, y_train)
@@ -33,6 +35,26 @@ def main():
     print compSSE(x_train, y_train, w_train)
     print "Training SSE: "
     print compSSE(x_test, y_test, w_test)
+
+
+    ### part 4 -- W and SSE without dummy 1s
+    print
+    print " ---- Without dummy ones ----"
+    print
+    ### compute optimal weight vector w
+    print "Training W: "
+    w_train_wo_dummy = compute_w(inputArr, y_train)
+    print w_train_wo_dummy
+    print "Testing W: "
+    w_test_wo_dummy = compute_w(inputArr2, y_test)
+    print w_test_wo_dummy
+
+    ### compute SSE
+    print "Training SSE: "
+    print compSSE(inputArr, y_train, w_train_wo_dummy)
+    print "Training SSE: "
+    print compSSE(inputArr2, y_test, w_test_wo_dummy)
+
 
 
 
