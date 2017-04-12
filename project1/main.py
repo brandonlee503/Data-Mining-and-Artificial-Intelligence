@@ -8,23 +8,32 @@ def main():
 
     # Ones column buffer
     ones = np.ones((433, 1))
+    ones_2 = np.ones((74, 1))
 
     # Input
     inputArr = np.loadtxt(open("housing_train.txt", "rb"), delimiter=" ", usecols = range(12))
     x_train = np.concatenate((ones, inputArr), axis=1)
     y_train = np.loadtxt(open("housing_train.txt", "rb"), delimiter=" ", usecols = [13])
-    # x_test = np.loadtxt(open("housing_test.txt", "rb"), delimiter=" ", usecols = range(12))
-    # y_test = np.loadtxt(open("housing_test.txt", "rb"), delimiter=" ", usecols = [13])
+
+    inputArr2 = np.loadtxt(open("housing_test.txt", "rb"), delimiter=" ", usecols = range(12))
+    x_test = np.concatenate((ones_2, inputArr2), axis=1)
+    y_test = np.loadtxt(open("housing_test.txt", "rb"), delimiter=" ", usecols = [13])
 
 
     ### Part 2 - compute optimal weight vector w
     print "Training W: "
-    w = compute_w(x_train, y_train)
-    print w
+    w_train = compute_w(x_train, y_train)
+    print w_train
+    print "Testing W: "
+    w_test = compute_w(x_test, y_test)
+    print w_test
 
-    # print "Testing W: "
-    # print compute_w(x_test, y_test)
-    print compSSE(x_train, y_train, w)
+    ### part 3 -- compute SSE
+    print "Training SSE: "
+    print compSSE(x_train, y_train, w_train)
+    print "Training SSE: "
+    print compSSE(x_test, y_test, w_test)
+
 
 
 
