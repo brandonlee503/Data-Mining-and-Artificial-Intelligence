@@ -17,6 +17,16 @@ def main():
     print "W: "
     print w
 
+    ### compute SSE
+
+    print compSSE(x, y, w)
+
+
+def compSSE(x, y, w):
+    e1 = np.transpose(y - np.matmul(x, w))
+    e2 = y - np.matmul(x, w)
+    e3 = np.matmul(e1, e2)
+    return e3
 
 if __name__ == '__main__':
     main()
