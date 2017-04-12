@@ -1,12 +1,23 @@
 import numpy as np
+np.set_printoptions(threshold=np.inf)
+np.set_printoptions(precision=4)
 
 def main():
-    ### input
-    x_train = np.loadtxt(open("housing_train.txt", "rb"), delimiter=" ", usecols = range(12))
+
+    ### Part 1 - Input
+
+    # Ones column buffer
+    ones = np.ones((433, 1))
+
+    # Input
+    inputArr = np.loadtxt(open("housing_train.txt", "rb"), delimiter=" ", usecols = range(12))
+    x_train = np.concatenate((ones, inputArr), axis=1)
     y_train = np.loadtxt(open("housing_train.txt", "rb"), delimiter=" ", usecols = [13])
     # x_test = np.loadtxt(open("housing_test.txt", "rb"), delimiter=" ", usecols = range(12))
     # y_test = np.loadtxt(open("housing_test.txt", "rb"), delimiter=" ", usecols = [13])
 
+
+    ### Part 2 - compute optimal weight vector w
     print "Training W: "
     w = compute_w(x_train, y_train)
     print w
