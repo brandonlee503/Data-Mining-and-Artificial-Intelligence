@@ -55,6 +55,31 @@ def main():
     print "Test SSE: "
     print compSSE(inputArr2, y_test, w_test_wo_dummy)
 
+    ### part 5 -- adding random features
+    for i in range (0,4,2):
+        # add rand feature columns to data
+        for j in range(0,i,2):
+            rand_feat_train_col = np.full((433, 1), j)
+            x_train = np.concatenate((x_train, rand_feat_train_col), axis=1)
+            rand_feat_test_col = np.full((74, 1), j)
+            x_test = np.concatenate((x_test, rand_feat_test_col), axis=1)
+        print
+        print " ---- With "+ str(i) + " random features ----"
+        print
+        ### Part 2 - compute optimal weight vector w
+        print "Training W: "
+        w_train = compute_w(x_train, y_train)
+        print w_train
+        print "Testing W: "
+        w_test = compute_w(x_test, y_test)
+        print w_test
+
+        ### part 3 -- compute SSE
+        print "Training SSE: "
+        print compSSE(x_train, y_train, w_train)
+        print "Test SSE: "
+        print compSSE(x_test, y_test, w_test)
+
 
 
 
@@ -62,6 +87,8 @@ def main():
 def compute_w(x,y):
     ### compute optimal weight vector w
     xTx = np.matmul(np.transpose(x), x)
+    print ("shape: ")
+    print xTx.shape
     xTx_inverse = np.linalg.inv(xTx)
     xTy = np.matmul(np.transpose(x), y)
 
