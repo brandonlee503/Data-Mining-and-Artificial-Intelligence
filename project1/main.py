@@ -81,6 +81,7 @@ def main():
 
 
 def generate_rand(arrLen):
+    ### Generate vector of 0's and random values
     dummy = [0] * arrLen
     for i, value in enumerate(dummy):
         coinflip = random.randint(0, 1)
