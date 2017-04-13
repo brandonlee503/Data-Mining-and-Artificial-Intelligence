@@ -44,9 +44,11 @@ def main():
     print
     ### compute optimal weight vector w
     print "Training W: "
-    print compute_w(inputArr, y_train)
+    w_train_wo_dummy = compute_w(inputArr, y_train)
+    print w_train_wo_dummy
     print "Testing W: "
-    print compute_w(inputArr2, y_test)
+    w_test_wo_dummy = compute_w(inputArr2, y_test)
+    print w_test_wo_dummy
 
     ### compute SSE
     print "Training SSE: "
