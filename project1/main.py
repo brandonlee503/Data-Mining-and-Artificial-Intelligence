@@ -112,15 +112,28 @@ def main():
     print "--- PART 6 ---"
     print
     lambda_vals = [0.01, 0.05, 0.1, 0.5, 1, 5]
+    sse_lam_train = []
+    sse_lam_test = []
     
     for lval in lambda_vals:
         print "Training W with lambda: " + str(lval)
         wl_train = computer_w_with_lambda(x_train, y_train, lval)
-        wl_test = computer_w_with_lambda(x_test, y_test, lambda_vals[0])
+        wl_test = computer_w_with_lambda(x_test, y_test, lval)
         print "Train SSE: "
-        print compute_SSE(x_train, y_train, wl_train)
+        comp_lam_train = compute_SSE(x_train, y_train, wl_train)
+        print comp_lam_train
         print "Test SSE: "
-        print compute_SSE(x_test, y_test, wl_test)
+        comp_lam_test = compute_SSE(x_test, y_test, wl_test)
+        print comp_lam_test
+
+        sse_lam_train.append(comp_lam_train)
+        sse_lam_test.append(comp_lam_test)
+
+    # Graphing uncomment to show graphs
+    #graph_sse_x(sse_lam_train, lambda_vals)
+    #graph_sse_x(sse_lam_test, lambda_vals)
+
+        
 
 
 def graph_sse_x(y, x):
