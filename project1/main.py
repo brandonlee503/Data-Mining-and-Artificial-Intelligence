@@ -33,9 +33,9 @@ def main():
 
     ### part 3 -- compute SSE
     print "Training SSE: "
-    print compSSE(x_train, y_train, w_train)
+    print compute_SSE(x_train, y_train, w_train)
     print "Test SSE: "
-    print compSSE(x_test, y_test, w_test)
+    print compute_SSE(x_test, y_test, w_test)
 
 
     ### part 4 -- W and SSE without dummy 1s
@@ -44,30 +44,28 @@ def main():
     print
     ### compute optimal weight vector w
     print "Training W: "
-    w_train_wo_dummy = compute_w(inputArr, y_train)
-    print w_train_wo_dummy
+    print compute_w(inputArr, y_train)
     print "Testing W: "
-    w_test_wo_dummy = compute_w(inputArr2, y_test)
-    print w_test_wo_dummy
+    print = compute_w(inputArr2, y_test)
 
     ### compute SSE
     print "Training SSE: "
-    print compSSE(inputArr, y_train, w_train_wo_dummy)
+    print compute_SSE(inputArr, y_train, w_train_wo_dummy)
     print "Test SSE: "
-    print compSSE(inputArr2, y_test, w_test_wo_dummy)
+    print compute_SSE(inputArr2, y_test, w_test_wo_dummy)
 
     ### part 5 -- adding random features
     for i in range (0,4,2):
         # add rand feature columns to data
         for j in range(0,i,2):
-            rand_feat_train_col = np.full((433, 1), j)
+            rand_feat_train_col = generate_rand(433)
             x_train = np.concatenate((x_train, rand_feat_train_col), axis=1)
-            rand_feat_test_col = np.full((74, 1), j)
+            rand_feat_test_col = generate_rand(74)
             x_test = np.concatenate((x_test, rand_feat_test_col), axis=1)
         print
         print " ---- With "+ str(i) + " random features ----"
         print
-        ### Part 2 - compute optimal weight vector w
+        ### compute optimal weight vector w
         print "Training W: "
         w_train = compute_w(x_train, y_train)
         print w_train
@@ -75,14 +73,14 @@ def main():
         w_test = compute_w(x_test, y_test)
         print w_test
 
-        ### part 3 -- compute SSE
+        ### compute SSE
         print "Training SSE: "
-        print compSSE(x_train, y_train, w_train)
+        print compute_SSE(x_train, y_train, w_train)
         print "Test SSE: "
-        print compSSE(x_test, y_test, w_test)
+        print compute_SSE(x_test, y_test, w_test)
 
 
-def generateDummy(arrLen):
+def generate_rand(arrLen):
     dummy = [0] * arrLen
     for i, value in enumerate(dummy):
         coinflip = random.randint(0, 1)
@@ -104,7 +102,7 @@ def compute_w(x,y):
     w = np.matmul(xTx_inverse, xTy)
     return w
 
-def compSSE(x, y, w):
+def compute_SSE(x, y, w):
     ### compute SSE
     e1 = np.transpose(y - np.matmul(x, w))
     e2 = y - np.matmul(x, w)
