@@ -12,11 +12,13 @@ def main():
     ones_2 = np.ones((74, 1))
 
     # Input
-    inputArr = np.loadtxt(open("housing_train.txt", "rb"), delimiter=" ", usecols = range(12))
+    inputArr = np.loadtxt(open("housing_train.txt", "rb"), delimiter=" ",
+                          usecols = range(13))
     x_train = np.concatenate((ones, inputArr), axis=1)
     y_train = np.loadtxt(open("housing_train.txt", "rb"), delimiter=" ", usecols = [13])
 
-    inputArr2 = np.loadtxt(open("housing_test.txt", "rb"), delimiter=" ", usecols = range(12))
+    inputArr2 = np.loadtxt(open("housing_test.txt", "rb"), delimiter=" ",
+                           usecols = range(13))
     x_test = np.concatenate((ones_2, inputArr2), axis=1)
     y_test = np.loadtxt(open("housing_test.txt", "rb"), delimiter=" ", usecols = [13])
 
