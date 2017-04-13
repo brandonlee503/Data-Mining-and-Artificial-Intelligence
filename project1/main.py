@@ -78,12 +78,12 @@ def main():
         print " ---- With "+ str(i) + " random features ----"
         print
         ### compute optimal weight vector w
-        print "Training W: "
+        #print "Training W: "
         w_train = compute_w(x_train, y_train)
-        print w_train
-        print "Testing W: "
+        #print w_train
+        #print "Testing W: "
         w_test = compute_w(x_test, y_test)
-        print w_test
+        #print w_test
 
         ### compute SSE
         print "Training SSE: "
@@ -123,8 +123,6 @@ def generate_rand(arrLen):
 def compute_w(x,y):
     ### compute optimal weight vector w
     xTx = np.matmul(np.transpose(x), x)
-    print ("shape: ")
-    print xTx.shape
     xTx_inverse = np.linalg.inv(xTx)
     xTy = np.matmul(np.transpose(x), y)
 
