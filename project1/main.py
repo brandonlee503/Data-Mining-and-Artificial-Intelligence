@@ -46,7 +46,7 @@ def main():
     print "Training W: "
     print compute_w(inputArr, y_train)
     print "Testing W: "
-    print = compute_w(inputArr2, y_test)
+    print compute_w(inputArr2, y_test)
 
     ### compute SSE
     print "Training SSE: "
