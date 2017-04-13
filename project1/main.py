@@ -100,10 +100,11 @@ def main():
 def generate_rand(arrLen):
     ### Generate vector of 0's and random values
     dummy = [0] * arrLen
+    a = random.randint(0, 10000)
     for i, value in enumerate(dummy):
         coinflip = random.randint(0, 1)
         if coinflip:
-            dummy[i] = random.randint(0, 500)
+            dummy[i] = random.randint(0, a)
 
     foo = np.asarray(dummy)[np.newaxis]
     return foo.T
@@ -134,8 +135,6 @@ def computer_w_with_lambda(x, y, l):
     xTy = np.matmul(np.transpose(x), y)
     w = np.matmul(xId_inverse, xTy)
     return w
-
-
 
 def compute_SSE(x, y, w):
     ### compute SSE
