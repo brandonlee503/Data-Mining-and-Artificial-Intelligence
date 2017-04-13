@@ -7,18 +7,26 @@ def main():
 
     ### Part 1 - Input
 
-    # Ones column buffer
-    ones = np.ones((433, 1))
-    ones_2 = np.ones((74, 1))
-
     # Input
+    # Training data
     inputArr = np.loadtxt(open("housing_train.txt", "rb"), delimiter=" ",
                           usecols = range(13))
+
+    # Number of columns based on rows in input array
+    (inputArr_col, _) = inputArr.shape
+    ones = np.ones((inputArr_col, 1))
+
     x_train = np.concatenate((ones, inputArr), axis=1)
     y_train = np.loadtxt(open("housing_train.txt", "rb"), delimiter=" ", usecols = [13])
 
+
+    # Testing data
     inputArr2 = np.loadtxt(open("housing_test.txt", "rb"), delimiter=" ",
                            usecols = range(13))
+
+    (inputArr_col2, _) = inputArr2.shape
+    ones_2 = np.ones((inputArr_col2, 1))
+
     x_test = np.concatenate((ones_2, inputArr2), axis=1)
     y_test = np.loadtxt(open("housing_test.txt", "rb"), delimiter=" ", usecols = [13])
 
