@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import matplotlib.pyplot as plt
 np.set_printoptions(threshold=np.inf)
 np.set_printoptions(precision=4)
 
@@ -67,6 +68,10 @@ def main():
     print compute_SSE(inputArr2, y_test, w_test_wo_dummy)
 
     ### part 5 -- adding random features
+    num_features = []
+    sse_f_train = []
+    sse_f_test = []
+ 
     for i in range (0,8,2):
         # add rand feature columns to data
         for j in range(0,i,2):
@@ -87,9 +92,20 @@ def main():
 
         ### compute SSE
         print "Training SSE: "
-        print compute_SSE(x_train, y_train, w_train)
+        comp_train_SSE = compute_SSE(x_train, y_train, w_train)
+        print comp_train_SSE
         print "Test SSE: "
-        print compute_SSE(x_test, y_test, w_test)
+        comp_test_SSE = compute_SSE(x_test, y_test, w_test)
+        print comp_test_SSE 
+
+        # Save values
+        num_features.append(i)
+        sse_f_train.append(comp_train_SSE)
+        sse_f_test.append(comp_test_SSE)
+
+    # Graph values uncomment to show graph
+    #graph_sse_x(sse_f_train, num_features)
+    #graph_sse_x(sse_f_test, num_features)
 
     ### part 6 --- computing w with lambda
     print
@@ -105,6 +121,11 @@ def main():
         print compute_SSE(x_train, y_train, wl_train)
         print "Test SSE: "
         print compute_SSE(x_test, y_test, wl_test)
+
+
+def graph_sse_x(y, x):
+    plt.plot(x, y)
+    plt.show()
 
 
 def generate_rand(arrLen):
