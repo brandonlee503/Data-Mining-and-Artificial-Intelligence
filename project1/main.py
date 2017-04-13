@@ -114,6 +114,9 @@ def main():
     lambda_vals = [0.01, 0.05, 0.1, 0.5, 1, 5]
     sse_lam_train = []
     sse_lam_test = []
+
+    wl_lam_train = []
+    wl_lam_test = []
     
     for lval in lambda_vals:
         print "Training W with lambda: " + str(lval)
@@ -126,12 +129,36 @@ def main():
         comp_lam_test = compute_SSE(x_test, y_test, wl_test)
         print comp_lam_test
 
+        #save values
         sse_lam_train.append(comp_lam_train)
         sse_lam_test.append(comp_lam_test)
+
+        wl_lam_train.append(wl_train)
+        wl_lam_test.append(wl_test)
 
     # Graphing uncomment to show graphs
     #graph_sse_x(sse_lam_train, lambda_vals)
     #graph_sse_x(sse_lam_test, lambda_vals)
+
+    ### Part 7 --- compare w values as lambda gets bigger
+
+    print
+    print "--- PART 7 ---"
+    print
+
+    ### Uncomment in order to see the values, maybe want to graph these instead
+    # commented because messy
+    #for i,lval in enumerate(lambda_vals):
+        #print "This is our lval: " + str(lval)
+        #print "Train W:"
+        #print wl_lam_train[i]
+        #print
+        #print "Test W:"
+        #print wl_lam_train[i]
+        #print
+
+    print "As lambda values increase [0.01, 1] the w values decrease until we hit lambda 5 where our w values increase"
+
 
         
 
