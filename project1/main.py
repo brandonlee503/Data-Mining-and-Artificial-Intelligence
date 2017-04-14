@@ -38,9 +38,6 @@ def main():
     print "Training W: "
     w_train = compute_w(x_train, y_train)
     print w_train
-    # print "Testing W: "
-    # w_test = compute_w(x_test, y_test)
-    # print w_test
 
     ### part 3 -- compute SSE
     print "Training SSE: "
@@ -57,9 +54,6 @@ def main():
     print "Training W: "
     w_train_wo_dummy = compute_w(inputArr, y_train)
     print w_train_wo_dummy
-    # print "Testing W: "
-    # w_test_wo_dummy = compute_w(inputArr2, y_test)
-    # print w_test_wo_dummy
 
     ### compute SSE
     print "Training SSE: "
@@ -85,10 +79,6 @@ def main():
         ### compute optimal weight vector w
         #print "Training W: "
         w_train = compute_w(x_train, y_train)
-        #print w_train
-        #print "Testing W: "
-        # w_test = compute_w(x_test, y_test)
-        #print w_test
 
         ### compute SSE
         print "Training SSE: "
@@ -116,12 +106,10 @@ def main():
     sse_lam_test = []
 
     wl_lam_train = []
-    # wl_lam_test = []
     
     for lval in lambda_vals:
         print "Training W with lambda: " + str(lval)
         wl_train = computer_w_with_lambda(x_train, y_train, lval)
-        # wl_test = computer_w_with_lambda(x_test, y_test, lval)
         print "Train SSE: "
         comp_lam_train = compute_SSE(x_train, y_train, wl_train)
         print comp_lam_train
@@ -134,7 +122,6 @@ def main():
         sse_lam_test.append(comp_lam_test)
 
         wl_lam_train.append(wl_train)
-        # wl_lam_test.append(wl_test)
 
     # Graphing uncomment to show graphs
     #graph_sse_x(sse_lam_train, lambda_vals)
