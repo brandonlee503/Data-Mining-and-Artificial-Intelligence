@@ -38,15 +38,15 @@ def main():
     print "Training W: "
     w_train = compute_w(x_train, y_train)
     print w_train
-    print "Testing W: "
-    w_test = compute_w(x_test, y_test)
-    print w_test
+    # print "Testing W: "
+    # w_test = compute_w(x_test, y_test)
+    # print w_test
 
     ### part 3 -- compute SSE
     print "Training SSE: "
     print compute_SSE(x_train, y_train, w_train)
     print "Test SSE: "
-    print compute_SSE(x_test, y_test, w_test)
+    print compute_SSE(x_test, y_test, w_train)
 
 
     ### part 4 -- W and SSE without dummy 1s
@@ -57,15 +57,15 @@ def main():
     print "Training W: "
     w_train_wo_dummy = compute_w(inputArr, y_train)
     print w_train_wo_dummy
-    print "Testing W: "
-    w_test_wo_dummy = compute_w(inputArr2, y_test)
-    print w_test_wo_dummy
+    # print "Testing W: "
+    # w_test_wo_dummy = compute_w(inputArr2, y_test)
+    # print w_test_wo_dummy
 
     ### compute SSE
     print "Training SSE: "
     print compute_SSE(inputArr, y_train, w_train_wo_dummy)
     print "Test SSE: "
-    print compute_SSE(inputArr2, y_test, w_test_wo_dummy)
+    print compute_SSE(inputArr2, y_test, w_train_wo_dummy)
 
     ### part 5 -- adding random features
     num_features = []
@@ -87,7 +87,7 @@ def main():
         w_train = compute_w(x_train, y_train)
         #print w_train
         #print "Testing W: "
-        w_test = compute_w(x_test, y_test)
+        # w_test = compute_w(x_test, y_test)
         #print w_test
 
         ### compute SSE
@@ -95,7 +95,7 @@ def main():
         comp_train_SSE = compute_SSE(x_train, y_train, w_train)
         print comp_train_SSE
         print "Test SSE: "
-        comp_test_SSE = compute_SSE(x_test, y_test, w_test)
+        comp_test_SSE = compute_SSE(x_test, y_test, w_train)
         print comp_test_SSE 
 
         # Save values
@@ -116,17 +116,17 @@ def main():
     sse_lam_test = []
 
     wl_lam_train = []
-    wl_lam_test = []
+    # wl_lam_test = []
     
     for lval in lambda_vals:
         print "Training W with lambda: " + str(lval)
         wl_train = computer_w_with_lambda(x_train, y_train, lval)
-        wl_test = computer_w_with_lambda(x_test, y_test, lval)
+        # wl_test = computer_w_with_lambda(x_test, y_test, lval)
         print "Train SSE: "
         comp_lam_train = compute_SSE(x_train, y_train, wl_train)
         print comp_lam_train
         print "Test SSE: "
-        comp_lam_test = compute_SSE(x_test, y_test, wl_test)
+        comp_lam_test = compute_SSE(x_test, y_test, wl_train)
         print comp_lam_test
 
         #save values
@@ -134,7 +134,7 @@ def main():
         sse_lam_test.append(comp_lam_test)
 
         wl_lam_train.append(wl_train)
-        wl_lam_test.append(wl_test)
+        # wl_lam_test.append(wl_test)
 
     # Graphing uncomment to show graphs
     #graph_sse_x(sse_lam_train, lambda_vals)
@@ -152,10 +152,6 @@ def main():
         #print "This is our lval: " + str(lval)
         #print "Train W:"
         #print wl_lam_train[i]
-        #print
-        #print "Test W:"
-        #print wl_lam_train[i]
-        #print
 
     print "As lambda values increase [0.01, 1] the w values decrease until we hit lambda 5 where our w values increase"
 
