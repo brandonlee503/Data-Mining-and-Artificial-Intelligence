@@ -94,8 +94,6 @@ def main():
         sse_f_test.append(comp_test_SSE)
 
     # Graph values uncomment to show graph
-    # graph_sse_x(sse_f_train, num_features, "SSE", "Number of Features")
-    # graph_sse_x(sse_f_test, num_features, "SSE", "Number of Features")
 
     #graph_sse_x(sse_f_train, sse_f_test, num_features, "SSE", "Number of Features",
                 #"Train", "Test")
@@ -127,10 +125,8 @@ def main():
         wl_lam_train.append(wl_train)
 
     # Graphing uncomment to show graphs
-    #graph_sse_x(sse_lam_train, lambda_vals)
-    #graph_sse_x(sse_lam_test, lambda_vals)
-    graph_sse_x(sse_lam_train, sse_lam_test, lambda_vals, "lambda values",
-                "SSE", "Train", "Test")
+    #graph_sse_x(sse_lam_train, sse_lam_test, lambda_vals, "lambda values",
+    #            "SSE", "Train", "Test")
 
     ### Part 7 --- compare w values as lambda gets bigger
 
@@ -170,7 +166,7 @@ def graph_sse_x(y, y1, x, ylabel, xlabel, ylegend, y1legend):
 def generate_rand(arrLen):
     ### Generate vector of 0's and random values
     dummy = [0] * arrLen
-    a = random.randint(0, 100)
+    a = random.randint(0, 1000)
     for i, value in enumerate(dummy):
         coinflip = random.randint(0, 1)
         if coinflip:
