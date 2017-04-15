@@ -102,7 +102,7 @@ def main():
     print
     print "--- PART 6 ---"
     print
-    lambda_vals = [0.01, 0.05, 0.1, 0.5, 1, 5]
+    lambda_vals = [0.01, 0.05, 0.1, 0.5, 0.75, 1, 2.5, 3.5, 5]
     sse_lam_train = []
     sse_lam_test = []
 
@@ -125,8 +125,8 @@ def main():
         wl_lam_train.append(wl_train)
 
     # Graphing uncomment to show graphs
-    #graph_sse_x(sse_lam_train, sse_lam_test, lambda_vals, "lambda values",
-    #            "SSE", "Train", "Test")
+    graph_sse_x(sse_lam_train, sse_lam_test, lambda_vals, "SSE",
+               "lambda values", "Train", "Test")
 
     ### Part 7 --- compare w values as lambda gets bigger
 
