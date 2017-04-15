@@ -94,8 +94,11 @@ def main():
         sse_f_test.append(comp_test_SSE)
 
     # Graph values uncomment to show graph
-    #graph_sse_x(sse_f_train, num_features)
-    #graph_sse_x(sse_f_test, num_features)
+    # graph_sse_x(sse_f_train, num_features, "SSE", "Number of Features")
+    # graph_sse_x(sse_f_test, num_features, "SSE", "Number of Features")
+
+    #graph_sse_x(sse_f_train, sse_f_test, num_features, "SSE", "Number of Features",
+                #"Train", "Test")
 
     ### part 6 --- computing w with lambda
     print
@@ -126,6 +129,8 @@ def main():
     # Graphing uncomment to show graphs
     #graph_sse_x(sse_lam_train, lambda_vals)
     #graph_sse_x(sse_lam_test, lambda_vals)
+    graph_sse_x(sse_lam_train, sse_lam_test, lambda_vals, "lambda values",
+                "SSE", "Train", "Test")
 
     ### Part 7 --- compare w values as lambda gets bigger
 
@@ -146,15 +151,26 @@ def main():
         
 
 
-def graph_sse_x(y, x):
+def graph_sse_x(y, x, ylabel, xlabel):
     plt.plot(x, y)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
     plt.show()
 
+def graph_sse_x(y, y1, x, ylabel, xlabel, ylegend, y1legend):
+    line1 = plt.plot(x, y)
+    line2 = plt.plot(x, y1)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+
+    plt.legend([ylegend,y1legend])
+
+    plt.show()
 
 def generate_rand(arrLen):
     ### Generate vector of 0's and random values
     dummy = [0] * arrLen
-    a = random.randint(0, 10000)
+    a = random.randint(0, 100)
     for i, value in enumerate(dummy):
         coinflip = random.randint(0, 1)
         if coinflip:
