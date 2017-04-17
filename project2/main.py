@@ -15,6 +15,8 @@ def main():
 
 
 # TODO: Test if this really parses data correctly
+# TODO: (Possibly) creates a view of original, when view is modified so is
+# original
 def importing_data():
     print "importing"
     testLoc = '../project2/usps-4-9-test.csv'
