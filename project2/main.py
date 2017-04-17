@@ -14,6 +14,7 @@ def main():
 
 
 
+# TODO: Test if this really parses data correctly
 def importing_data():
     print "importing"
     testLoc = '../project2/usps-4-9-test.csv'
