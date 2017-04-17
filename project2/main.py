@@ -1,16 +1,40 @@
 import numpy as np
-
-
+import pandas as pd
 
 
 # TODO: input,work, output
+# TODO: ^ make a more descriptive todo
 
 def main():
-    print "main"
+    (testData_x, testData_y, trainData_x, trainData_y) = importing_data()
 
 
 
 
+
+
+
+def importing_data():
+    print "importing"
+    testLoc = '../project2/usps-4-9-test.csv'
+    trainLoc = '../project2/usps-4-9-train.csv'
+
+    dfTest = pd.read_csv(testLoc, header=None)
+    dfTrain = pd.read_csv(trainLoc, header=None)
+    
+    dfTestArr = dfTest.values
+    dfTrainArr = dfTrain.values
+
+    (_, testSize_col) = dfTestArr.shape
+    (_, trainSize_col) = dfTrainArr.shape
+
+    dfTest_x = dfTestArr[:,:-1]
+    dfTest_y = dfTestArr[:, testSize_col-1]
+
+    dfTrain_x = dfTrainArr[:,:-1]
+    dfTrain_y = dfTrainArr[:, trainSize_col-1]
+
+    return (dfTest_x, dfTest_y, dfTrain_x, dfTrain_y)
 
 
 
