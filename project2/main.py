@@ -7,12 +7,68 @@ import pandas as pd
 
 def main():
     (testData_x, testData_y, trainData_x, trainData_y) = importing_data()
+    part_one(testData_x, testData_y, trainData_x, trainData_y)
 
 
 
 
 
+def part_one(testData_x, testData_y, trainData_x, trainData_y):
+    print "part one"
 
+    #testing regression
+    w = batchLogisticRegression(testData_x[380:420,:], testData_y[380:420])
+    #print number of correctly predicted values
+    correct = 0
+    for i in range(80):
+        correct = correct + testLogisticRegression(testData_x[380+i,:], testData_y[380+i], w)
+    print correct
+
+# create w 
+def batchLogisticRegression(x, y):
+    learningRate = .05
+    numFeatures = x.shape[1]
+    w = np.zeros(numFeatures)
+
+    j = 0
+
+    while(1):
+        d = np.zeros(numFeatures) 
+
+        for i, yi in enumerate(y):
+            wxi = np.dot(w, x[i,:])
+
+            nwxi = wxi * -1
+            denom = 1 + np.exp(nwxi)
+            yihat = 1/denom
+            error = yi - yihat
+
+            d = d + np.multiply(error, x[i,:])
+
+        w = w + np.multiply(learningRate, d)
+        j = j + 1
+        if(j > 100):
+            break;
+
+    # print w
+    return w
+
+# returns 1 if analysis was correct and 0 if analysis was incorrect
+def testLogisticRegression(x, y, w):
+    exp_wx = np.exp(np.matmul(np.transpose(w), x) * -1)
+
+    denom_one = 1 + exp_wx
+    prob_one = 1/denom_one
+
+    prob_zero = exp_wx/denom_one
+
+    if((prob_one/prob_zero) > 1):
+        if(y == 1):
+            return 1
+    else:
+        if(y == 0):
+            return 1
+    return -1
 
 # TODO: Test if this really parses data correctly
 # TODO: (Possibly) creates a view of original, when view is modified so is
