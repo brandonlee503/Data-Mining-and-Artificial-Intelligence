@@ -1,5 +1,9 @@
 import numpy as np
 import pandas as pd
+from math import exp
+
+
+LEARNING_RATE = 0
 
 
 # TODO: input,work, output
@@ -69,6 +73,27 @@ def testLogisticRegression(x, y, w):
         if(y == 0):
             return 1
     return -1
+    # print trainData_x
+    print len(trainData_x)
+    print len(trainData_y)
+    # np.savetxt('foo.csv', trainData_x, fmt='%10.5f', delimiter=',')
+
+# TODO: TEST ME
+def batch_log_regression(x, y):
+    w = np.zeros(len(x))
+    # Convergence or whatever stopping condition we choose
+    for i in range(1000):
+        d = np.zeros(len(x))
+        for i in range(len(x)):
+            compute_prediction(x, w)
+
+# TODO: TEST ME
+def compute_prediction(row, coefficients):
+    # Logistic regression prediction
+    yhat = coefficients[0]
+    for i in range(len(row)-1):
+        yhat += coefficients[i+1] * row[i]
+    return 1 / (1 + exp(-yhat))
 
 # TODO: Test if this really parses data correctly
 # TODO: (Possibly) creates a view of original, when view is modified so is
@@ -80,7 +105,7 @@ def importing_data():
 
     dfTest = pd.read_csv(testLoc, header=None)
     dfTrain = pd.read_csv(trainLoc, header=None)
-    
+
     dfTestArr = dfTest.values
     dfTrainArr = dfTrain.values
 
