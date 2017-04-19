@@ -1,18 +1,18 @@
 # Resources
 # http://machinelearningmastery.com/logistic-regression-tutorial-for-machine-learning/
-
+# http://machinelearningmastery.com/logistic-regression-for-machine-learning/
 import sys
 import numpy as np
 import csv
 from numpy import genfromtxt
 from math import exp
 
-LEARNING_RATE = 0.3
+LEARNING_RATE = 0.000000001
+N_EPOCH = 10
 
 def main():
     XTrain, YTrain, XTest, YTest = getData()
-    computeCoefficient(XTrain, YTrain, LEARNING_RATE, 2)
-    # batchLogisticRegression(XTrain, YTrain, LEARNING_RATE)
+    computeCoefficient(XTrain, YTrain, LEARNING_RATE, N_EPOCH)
 
 def getData():
     trainData = genfromtxt('usps-4-9-train.csv', delimiter=',')
@@ -25,56 +25,21 @@ def getData():
 
     return XTrain, YTrain, XTest, YTest
 
-
-# def batchLogisticRegression(x, y, lr):
-#     numFeatures = x.shape[1]
-#     w = np.zeros(numFeatures)
-#     j = 0
-#     while(1):
-#         d = np.zeros(numFeatures)
-#         for i, yi in enumerate(y):
-#             wxi = np.dot(w, x[i,:])
-#             nwxi = wxi * -1
-#             denom = 1 + np.exp(nwxi)
-#             yihat = 1/denom
-#             print yihat
-#             error = yi - yihat
-#             d = d + np.multiply(error, x[i,:])
-#         w = w + np.multiply(lr, d)
-#         j = j + 1
-#         # Break after j iterations
-#         if(j >= 10):
-#             break;
-#     return w
-
-
 # Logistic regression prediction
 def computePrediction(row, w):
-    dot = np.dot(w, row)
-    print dot
-    exp = np.exp(-1.0 * dot)
-    print exp
     return 1.0 / (1.0 + np.exp(-1.0 * (np.dot(w, row))))
-
 
 # Calculate coefficients w/ batch stochastic gradient descent
 def computeCoefficient(trainingX, trainingY, learningRate, nEpoch):
     w = np.zeros(trainingX.shape[1])
     for epoch in range(nEpoch):
         d = np.zeros(trainingX.shape[1])
-        # print("foo: " + str(epoch))
         for row in range(len(trainingX)):
             yHat = computePrediction(trainingX[row], w)
-            print yHat
             error = float(trainingY[row]) - yHat
-            # print "error: " + str(error)
-            # print trainingX[row].shape
-            # print np.multiply(error, trainingX[row])
-            # d = d + (np.multiply(error, trainingX[row]))
-            # print "foo"
-            # print d.shape
             d = np.add(d, np.multiply(error, trainingX[row]))
         w = w + (learningRate*d)
+    return w
 
 # Estimate logistic regression coefficients using stochastic gradient descent
 def coefficients_sgd(train, l_rate, n_epoch):
@@ -90,9 +55,6 @@ def coefficients_sgd(train, l_rate, n_epoch):
 				coef[i + 1] = coef[i + 1] + l_rate * error * yhat * (1.0 - yhat) * row[i]
 		print('>epoch=%d, lrate=%.3f, error=%.3f' % (epoch, l_rate, sum_error))
 	return coef
-
-
-
 
 if __name__ == '__main__':
     main()
