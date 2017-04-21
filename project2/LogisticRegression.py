@@ -25,3 +25,12 @@ class LR:
                 correct = correct + 1
 
         return float(correct) / float(y.shape[0])
+
+    def computeCoefficientReg(self, x, y, w):
+        d = np.zeros(w.shape[0])
+
+        for row in range(len(x)):
+            yHat = self.computePrediction(x[row], w)
+            error = float(y[row]) - yHat
+            d = np.add(d, np.multiply(error, x[row]))
+        return d
