@@ -9,7 +9,7 @@ from math import exp
 from LogisticRegression import LR
 
 LEARNING_RATE = 0.000000001
-N_EPOCH = 900
+N_EPOCH = 10000
 
 def main():
     lr = LR()
