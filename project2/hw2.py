@@ -20,7 +20,7 @@ def main():
     print 'Starting problem 2...'
     problem2(XTrain, YTrain, XTest, YTest, LEARNING_RATE, N_EPOCH, lr)
     print 'Starting problem 3...'
-    problem3(XTrain, YTrain, XTest, YTest, LEARNING_RATE, N_EPOCH, lr)
+    problem4(XTrain, YTrain, XTest, YTest, LEARNING_RATE, N_EPOCH, lr)
 
 def problem2(XTrain, YTrain, XTest, YTest, learningRate, nEpoch, lr):
     w = np.zeros(XTrain.shape[1])
@@ -37,7 +37,7 @@ def problem2(XTrain, YTrain, XTest, YTest, learningRate, nEpoch, lr):
         trainCorrectness.append(lr.testData(w, XTrain, YTrain))
         testCorrectness.append(lr.testData(w, XTest, YTest))
 
-def problem3(XTrain, YTrain, XTest, YTest, learningRate, nEpoch, lr):
+def problem4(XTrain, YTrain, XTest, YTest, learningRate, nEpoch, lr):
     w = np.zeros(XTrain.shape[1])
     trainCorrectness = []
     testCorrectness = []
