@@ -21,7 +21,7 @@ def main():
     w = problem2(XTrain, YTrain, XTest, YTest, LEARNING_RATE, N_EPOCH, lr)
 
     print 'Starting problem 3...'
-    problem3(XTrain, YTrain, XTest, YTest, LEARNING_RATE, N_EPOCH, lr)
+    problem4(XTrain, YTrain, XTest, YTest, LEARNING_RATE, N_EPOCH, lr)
 
 def problem2(XTrain, YTrain, XTest, YTest, learningRate, nEpoch, lr):
     w = np.zeros(XTrain.shape[1])
@@ -38,10 +38,7 @@ def problem2(XTrain, YTrain, XTest, YTest, learningRate, nEpoch, lr):
         trainCorrectness.append(lr.testData(w, XTrain, YTrain))
         testCorrectness.append(lr.testData(w, XTest, YTest))
 
-    nicePrint(trainCorrectness, testCorrectness)
-    return w
-
-def problem3(XTrain, YTrain, XTest, YTest, learningRate, nEpoch, lr):
+def problem4(XTrain, YTrain, XTest, YTest, learningRate, nEpoch, lr):
     w = np.zeros(XTrain.shape[1])
     print 'Training model and testing correctness...'
     for regcoefficient in [0.01, 0.1, 1, 10, 100, 1000, 5000]:
