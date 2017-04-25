@@ -1,8 +1,8 @@
 import sys
 import numpy as np
 import csv
+import math
 from numpy import genfromtxt
-from math import exp
 
 def main():
     XTrain, YTrain, XTest, YTest = getData()
@@ -19,6 +19,12 @@ def getData():
 
     return XTrain, YTrain, XTest, YTest
 
+
+def distance(x, xi):
+    sumDistance = 0
+    for j in range(len(x)):
+        sumDistance += pow((x[j] - xi[j]), 2)
+    return math.sqrt(sumDistance)
 
 if __name__ == '__main__':
     main()
