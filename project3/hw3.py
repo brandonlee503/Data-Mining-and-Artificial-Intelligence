@@ -6,7 +6,13 @@ from numpy import genfromtxt
 
 def main():
     XTrain, YTrain, XTest, YTest = getData()
+    print getKNN(3, XTrain, XTest[0])
 
+
+def getKNN(k, XTrain, testRow):
+    distances = [(trainRow, distance(testRow, trainRow)) for i, trainRow in enumerate(XTrain)]
+    distances.sort(key=lambda tup: tup[1])
+    return [distances[i][0] for i in range(k)]
 
 def getData():
     training = genfromtxt('knn_train.csv', delimiter=',')
