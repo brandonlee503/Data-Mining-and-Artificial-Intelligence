@@ -4,15 +4,45 @@ import csv
 import math
 from numpy import genfromtxt
 
+K = range(1, 52, 2)
+
 def main():
     XTrain, YTrain, XTest, YTest = getData()
-    print getKNN(3, XTrain, XTest[0])
+    problem2(XTrain, YTrain, XTest, YTest)
 
 
-def getKNN(k, XTrain, testRow):
-    distances = [(trainRow, distance(testRow, trainRow)) for i, trainRow in enumerate(XTrain)]
+def problem2(XTrain, YTrain, XTest, YTest):
+    testResults = []
+    trainResults = []
+    crossValidation = []
+
+    computeCorrect(XTrain, YTrain, XTest, YTest, testResults)
+    computeCorrect(XTrain, YTrain, XTrain, YTrain, trainResults)
+
+    print(testResults)
+
+
+def computeCorrect(XTrain, YTrain, x, y, results):
+    for i, k in enumerate(K):
+        knn = [getKNN(k, XTrain, YTrain, row) for row in x]
+        correct = 0
+
+        for j, row in enumerate(knn):
+            result = sum(row)
+            if result > 0 and y[j] == 1 or result < 0 and y[j] == -1:
+                correct += 1
+        results.append(correct)
+
+    return results
+
+
+
+def getKNN(k, XTrain, YTrain, testRow):
+    distances = [(*YTrain[i], distance(testRow, trainRow)) for i, trainRow in enumerate(XTrain)]
     distances.sort(key=lambda tup: tup[1])
+
     return [distances[i][0] for i in range(k)]
+
 
 def getData():
     training = genfromtxt('knn_train.csv', delimiter=',')
@@ -30,7 +60,9 @@ def distance(x, xi):
     sumDistance = 0
     for j in range(len(x)):
         sumDistance += pow((x[j] - xi[j]), 2)
+
     return math.sqrt(sumDistance)
+
 
 if __name__ == '__main__':
     main()
