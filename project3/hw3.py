@@ -8,20 +8,29 @@ K = range(1, 52, 2)
 
 def main():
     XTrain, YTrain, XTest, YTest = getData()
-    problem2(XTrain, YTrain, XTest, YTest)
+    part1Problem2(XTrain, YTrain, XTest, YTest)
 
 
-def problem2(XTrain, YTrain, XTest, YTest):
+def part1Problem2(XTrain, YTrain, XTest, YTest):
     testResults = []
     trainResults = []
     crossValidation = []
 
-    computeCorrect(XTrain, YTrain, XTest, YTest, testResults)
+    # Compute for training set
     computeCorrect(XTrain, YTrain, XTrain, YTrain, trainResults)
+    # Compute for testing set
+    computeCorrect(XTrain, YTrain, XTest, YTest, testResults)
+
+    # Compute for leave out one cross validation
+    for i, row in enumerate(XTrain):
+        crossValidation.append([])
+        computeCorrect(XTrain, YTrain, XTest, YTest, crossValidation[i])
+        print(crossValidation[i])
+
 
     print(testResults)
 
-
+# Compares model with dataset and calculates number of correct rows
 def computeCorrect(XTrain, YTrain, x, y, results):
     for i, k in enumerate(K):
         knn = [getKNN(k, XTrain, YTrain, row) for row in x]
@@ -35,14 +44,13 @@ def computeCorrect(XTrain, YTrain, x, y, results):
 
     return results
 
-
+# Returns k neighbors of given set
 def getKNN(k, XTrain, YTrain, testRow):
     distances = [(*YTrain[i], getDistance(testRow, trainRow)) for i, trainRow in enumerate(XTrain)]
     distances.sort(key=lambda tup: tup[1])
-
     return [distances[i][0] for i in range(k)]
 
-
+# Parse CSV
 def getData():
     training = genfromtxt('knn_train.csv', delimiter=',')
     testing = genfromtxt('knn_test.csv', delimiter=',')
@@ -52,6 +60,7 @@ def getData():
     YTest = np.array(testing[:,0:1])
     return XTrain, YTrain, XTest, YTest
 
+# Gets the distance between two points
 def getDistance(x, xi):
     sumDistance = 0
     for j in range(len(x)):
