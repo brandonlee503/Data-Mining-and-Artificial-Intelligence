@@ -50,6 +50,14 @@ def getKNN(k, XTrain, YTrain, testRow):
     distances.sort(key=lambda tup: tup[1])
     return [distances[i][0] for i in range(k)]
 
+# Gets the distance between two points
+def getDistance(x, xi):
+    sumDistance = 0
+    for j in range(len(x)):
+        sumDistance += pow((x[j] - xi[j]), 2)
+
+    return math.sqrt(sumDistance)
+
 # Parse CSV
 def getData():
     training = genfromtxt('knn_train.csv', delimiter=',')
@@ -59,14 +67,6 @@ def getData():
     XTest = np.array(testing[:,1:31])
     YTest = np.array(testing[:,0:1])
     return XTrain, YTrain, XTest, YTest
-
-# Gets the distance between two points
-def getDistance(x, xi):
-    sumDistance = 0
-    for j in range(len(x)):
-        sumDistance += pow((x[j] - xi[j]), 2)
-
-    return math.sqrt(sumDistance)
 
 if __name__ == '__main__':
     main()
