@@ -5,10 +5,12 @@ import math
 from numpy import genfromtxt
 
 K = range(1, 52, 2)
+CLASS_VALUES = [-1, 1]
 
 def main():
     XTrain, YTrain, XTest, YTest = getData()
     # part1Problem2(XTrain, YTrain, XTest, YTest)
+    # print(XTrain)
     print(getSplit(0, 15, XTrain))
 
 ### PART 1
@@ -62,17 +64,15 @@ def getDistance(x, xi):
 
 ### PART 2
 
-def getGiniIndex(sections, values, YTrain):
+def getGiniIndex(sections):
     """
     Calculate GiniIndex to evaluate split cost
 
     @param sections: All the sections of a divide
-    @param values: The class values
-    @param YTrain: Class results
     @return: The Gini index for cost of split
     """
     gini = 0.0
-    for value in values:
+    for value in CLASS_VALUES:
         for section in sections:
             sectionSize = len(section)
             if sectionSize == 0:
@@ -97,6 +97,23 @@ def getSplit(index, value, data):
         else:
             right.append(row[index])
     return left, right
+
+def getBestSplit(data):
+    """
+    Greedily calls getSplit() on every value on every feature, evaluates the cost,
+    produce best split.
+
+    @param data: The dataset which is being utilized
+    @return: Dictionary representing best value
+    """
+    bestIndex, bestValue, bestScore, bestGroups = 100, 100, 100, None
+    for i in range(len(data[0] - 1)):
+        for row in data:
+            groups = getSplit(i, row[i], data)
+            gini = getGiniIndex(groups)
+            if gini < bestScore:
+                bestIndex, bestValue, bestScore, bestGroups = i, row[i], gini, groups
+    return {"index": bestIndex, "value": bestValue, "groups": bestGroups}
 
 # Parse CSV
 def getData():
