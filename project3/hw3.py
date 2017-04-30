@@ -10,6 +10,7 @@ def main():
     XTrain, YTrain, XTest, YTest = getData()
     part1Problem2(XTrain, YTrain, XTest, YTest)
 
+### PART 1
 
 def part1Problem2(XTrain, YTrain, XTest, YTest):
     testResults = []
@@ -58,6 +59,26 @@ def getDistance(x, xi):
 
     return math.sqrt(sumDistance)
 
+### PART 2
+
+def getGiniIndex(sections, values, YTrain):
+    """
+    Calculate GiniIndex to evaluate split cost
+
+    @param sections: All the sections of a divide
+    @param values: The class values
+    @return: The Gini index for cost of split
+    """
+    gini = 0.0
+    for value in values:
+        for section in sections:
+            sectionSize = len(section)
+            if sectionSize == 0:
+                continue
+            ratio = YTrain.count(value) / float(sectionSize)
+            gini += (ratio * (1.0 - ratio))
+    return gini
+    
 # Parse CSV
 def getData():
     training = genfromtxt('knn_train.csv', delimiter=',')
