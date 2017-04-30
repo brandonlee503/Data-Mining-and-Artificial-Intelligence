@@ -8,7 +8,8 @@ K = range(1, 52, 2)
 
 def main():
     XTrain, YTrain, XTest, YTest = getData()
-    part1Problem2(XTrain, YTrain, XTest, YTest)
+    # part1Problem2(XTrain, YTrain, XTest, YTest)
+    print(getSplit(0, 15, XTrain))
 
 ### PART 1
 
@@ -67,6 +68,7 @@ def getGiniIndex(sections, values, YTrain):
 
     @param sections: All the sections of a divide
     @param values: The class values
+    @param YTrain: Class results
     @return: The Gini index for cost of split
     """
     gini = 0.0
@@ -78,7 +80,24 @@ def getGiniIndex(sections, values, YTrain):
             ratio = YTrain.count(value) / float(sectionSize)
             gini += (ratio * (1.0 - ratio))
     return gini
-    
+
+def getSplit(index, value, data):
+    """
+    Split data based off of attribute and value
+
+    @param index: Attribute index
+    @param value: Attribute value
+    @param data: Dataset
+    @return: Two np arrays representing the split data
+    """
+    left, right = list(), list()
+    for row in data:
+        if row[index] < value:
+            left.append(row[index])
+        else:
+            right.append(row[index])
+    return left, right
+
 # Parse CSV
 def getData():
     training = genfromtxt('knn_train.csv', delimiter=',')
