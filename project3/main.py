@@ -17,7 +17,10 @@ CLASS_VALUES = [-1, 1]
 def main():
     XTrain, YTrain, XTest, YTest = getData()
 
-    part1Problem2(XTrain, YTrain, XTest, YTest)
+    # part1Problem2(XTrain, YTrain, XTest, YTest)
+    # foo = getBestSplit(XTrain, YTrain)
+    print(getBestSplit(XTrain, YTrain))
+    # print('Split: [X%d < %.3f]' % ((foo['index']+1), foo['value']))
 
 # Parse CSV
 def getData():
