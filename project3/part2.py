@@ -60,7 +60,6 @@ def getBestSplit(data):
         for row in data:
             groups = getSplit(i, row[i], data)
             gini = getGiniIndex(groups)
-            print('X%d < %.3f Gini=%.3f' % ((i+1), row[i], gini))
             if gini < bestScore:
                 bestIndex, bestValue, bestScore, bestGroups = i, row[i], gini, groups
     return {"index": bestIndex, "value": bestValue, "groups": bestGroups}
@@ -74,3 +73,16 @@ def setMajorityClass(section):
     """
     majority = [row[-1] for row in section]
     return max(key=majority.count, set(majority))
+
+def splitTree(node, currentDepth, maxDepth, minSize):
+    """
+    Recursively builds the decision tree through best splitting and
+    based on a variety of parameters.
+
+    @param node: Initial stump
+    @param currentDepth: The current level
+    @param maxDepth: Maximum depth before setting majority class
+    @param minSize: Minimum # of rows before setting majority class
+    @returns: A recrusively built tree
+    """
+    pass
