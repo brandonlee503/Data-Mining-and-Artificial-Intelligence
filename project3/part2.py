@@ -64,3 +64,13 @@ def getBestSplit(data):
             if gini < bestScore:
                 bestIndex, bestValue, bestScore, bestGroups = i, row[i], gini, groups
     return {"index": bestIndex, "value": bestValue, "groups": bestGroups}
+
+def setMajorityClass(section):
+    """
+    Select class value for section of rows. This is the majority class.
+
+    @param section: A subsection of rows
+    @return: Most common result class
+    """
+    majority = [row[-1] for row in section]
+    return max(key=majority.count, set(majority))
