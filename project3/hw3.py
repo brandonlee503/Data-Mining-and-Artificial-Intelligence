@@ -1,3 +1,7 @@
+# References
+# http://machinelearningmastery.com/k-nearest-neighbors-for-machine-learning/
+# http://machinelearningmastery.com/classification-and-regression-trees-for-machine-learning/
+
 import sys
 import numpy as np
 import csv
