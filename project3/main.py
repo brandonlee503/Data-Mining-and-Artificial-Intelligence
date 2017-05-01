@@ -11,9 +11,6 @@ from numpy import genfromtxt
 from part1 import part1Problem2
 from part2 import getGiniIndex, getSplit, getBestSplit
 
-K = range(1, 52, 2)
-CLASS_VALUES = [-1, 1]
-
 def main():
     # Seperate data and class values
     XTrain, YTrain, XTest, YTest = getData()
