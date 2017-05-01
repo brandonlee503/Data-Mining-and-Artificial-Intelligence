@@ -70,6 +70,3 @@ def getData():
     XTest = np.array(testing[:,1:31])
     YTest = np.array(testing[:,0:1])
     return XTrain, YTrain, XTest, YTest
-
-if __name__ == '__main__':
-    main()
