@@ -23,12 +23,13 @@ def main():
     TrainingData = np.append(XTrain, YTrain, axis=1)
     TestingData = np.append(XTest, YTest, axis=1)
 
+    part1Problem2(TrainingData, TestingData)
     # part1Problem2(XTrain, YTrain, XTest, YTest)
     # foo = getBestSplit(TrainingData)
     # print(getBestSplit(TrainingData))
     # print('Split: [X%d < %.3f]' % ((foo['index']+1), foo['value']))
-    tree = createTree(TrainingData, 1, 10)
-    print_tree(tree)
+    # tree = createTree(TrainingData, 1, 10)
+    # print_tree(tree)
 
 
 # Parse CSV
