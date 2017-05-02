@@ -166,6 +166,9 @@ def printTree(treeNode, depth=0):
     """
     Prints decision tree for visual observation
     http://machinelearningmastery.com/implement-decision-tree-algorithm-scratch-python/
+
+    @param treeNode: The decision tree node
+    @param depth: Current depth
     """
     if isinstance(treeNode, dict):
         print("%s{X%d = %.4f}" % ((depth*str(depth), (treeNode["index"] + 1), treeNode["value"])))
@@ -174,6 +177,17 @@ def printTree(treeNode, depth=0):
     else:
         print("%s{%s}" % ((depth * "*", treeNode)))
 
+def printInfoGain(treeNode, depth=0):
+    """
+    Iterates through the decision tree and prints all the gini values.
+
+    @param treeNode: The decision tree node
+    @param depth: Current depth
+    """
+    if isinstance(treeNode, dict):
+        print("Depth: " + str(depth) + " | Information Gain: " + str(treeNode["infoGain"]))
+        printInfoGain(treeNode["left"], depth + 1)
+        printInfoGain(treeNode["right"], depth + 1)
 
 def createDecisionStump(trainingData, testingData):
     """
@@ -190,3 +204,23 @@ def createDecisionStump(trainingData, testingData):
     print("Information Gain: " + str(tree["infoGain"]))
     print("Training Error Rate: " + str(getErrorRate(tree, trainingData)))
     print("Testing Error Rate: " + str(getErrorRate(tree, testingData)))
+    print("\n")
+
+def createDecisionTree(trainingData, testingData):
+    """
+    Part 2 Problem 2 - Create decision tree and display associated values
+
+    @param trainingData: The training dataset
+    @param testingData: The testing dataset
+    """
+    # Max depth of 6
+    tree = createTree(trainingData, 6, 10)
+    print("PART 2 PROBLEM 2")
+    print("Learned Tree:")
+    printTree(tree)
+    print("\n")
+    # print("Information Gain: " + str(tree["infoGain"]))
+    printInfoGain(tree)
+    print("Training Error Rate: " + str(getErrorRate(tree, trainingData)))
+    print("Testing Error Rate: " + str(getErrorRate(tree, testingData)))
+    print("\n")

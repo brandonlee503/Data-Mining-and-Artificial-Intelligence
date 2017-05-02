@@ -9,7 +9,7 @@ import math
 from numpy import genfromtxt
 
 from part1 import part1Problem2
-from part2 import createDecisionStump
+from part2 import createDecisionStump, createDecisionTree
 
 def main():
     # Seperate data and class values
@@ -23,8 +23,12 @@ def main():
     TrainingData = np.append(XTrain, YTrain, axis=1)
     TestingData = np.append(XTest, YTest, axis=1)
 
+    # PART 1
     part1Problem2(TrainingData, TestingData)
+
+    # PART 2
     createDecisionStump(TrainingData, TestingData)
+    createDecisionTree(TrainingData, TestingData)
 
 
 # Parse CSV
