@@ -72,6 +72,7 @@ def setMajorityClass(section):
     @return: Most common result class
     """
     majority = [row[-1] for row in section]
+    print(majority)
     return max(set(majority), key=majority.count)
 
 def splitTree(node, currentDepth, maxDepth, minSize):
@@ -91,7 +92,7 @@ def splitTree(node, currentDepth, maxDepth, minSize):
     if not left or not right:
         node["left"] = node["right"] = setMajorityClass(left + right)
     # Check if max depth has been reached
-    if maxDepth <= depth:
+    if maxDepth <= currentDepth:
         node["left"], node["right"] = setMajorityClass(left), setMajorityClass(right)
     # Check left child
     if len(left) <= minSize:
@@ -116,6 +117,16 @@ def createTree(data, maxDepth, minSize):
     @param minSize: Minimum # of rows before setting majority class
     @returns: A decision tree
     """
-    root = getSplit(data)
-    split(root, 1, maxDepth, minSize)
+    root = getBestSplit(data)
+    splitTree(root, 1, maxDepth, minSize)
     return root
+
+
+# Print a decision tree
+def print_tree(node, depth=0):
+	if isinstance(node, dict):
+		print('%s[X%d < %.3f]' % ((depth*' ', (node['index']+1), node['value'])))
+		print_tree(node['left'], depth+1)
+		print_tree(node['right'], depth+1)
+	else:
+		print('%s[%s]' % ((depth*' ', node)))
