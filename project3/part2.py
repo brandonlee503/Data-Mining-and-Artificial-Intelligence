@@ -72,7 +72,7 @@ def setMajorityClass(section):
     @return: Most common result class
     """
     majority = [row[-1] for row in section]
-    return max(key=majority.count, set(majority))
+    return max(set(majority), key=majority.count)
 
 def splitTree(node, currentDepth, maxDepth, minSize):
     """
