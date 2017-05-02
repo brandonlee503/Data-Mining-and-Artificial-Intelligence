@@ -9,7 +9,7 @@ import math
 from numpy import genfromtxt
 
 from part1 import part1Problem2
-from part2 import createTree, print_tree
+from part2 import createDecisionStump
 
 def main():
     # Seperate data and class values
@@ -24,11 +24,7 @@ def main():
     TestingData = np.append(XTest, YTest, axis=1)
 
     # part1Problem2(XTrain, YTrain, XTest, YTest)
-    # foo = getBestSplit(TrainingData)
-    # print(getBestSplit(TrainingData))
-    # print('Split: [X%d < %.3f]' % ((foo['index']+1), foo['value']))
-    tree = createTree(TrainingData, 1, 10)
-    print_tree(tree)
+    createDecisionStump(TrainingData, TestingData)
 
 
 # Parse CSV

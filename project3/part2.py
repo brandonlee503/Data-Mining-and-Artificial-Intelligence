@@ -12,7 +12,7 @@ CLASS_VALUES = [-1.0, 1.0]
 
 def getGiniIndex(sections):
     """
-    Calculate Gini Index to evaluate split cost
+    Calculate Gini Index to evaluate split cost. This is the information gain.
 
     @param sections: All the sections of a divide
     @return: The Gini index for cost of split
@@ -64,7 +64,8 @@ def getBestSplit(data):
             gini = getGiniIndex(groups)
             if gini < bestScore:
                 bestIndex, bestValue, bestScore, bestGroups = i, row[i], gini, groups
-    return {"index": bestIndex, "value": bestValue, "groups": bestGroups}
+
+    return {"index": bestIndex, "value": bestValue, "groups": bestGroups, "infoGain": bestScore}
 
 def setMajorityClass(section):
     """
@@ -126,11 +127,66 @@ def createTree(data, maxDepth, minSize):
     return root
 
 
-# Print a decision tree
-def print_tree(node, depth=0):
-	if isinstance(node, dict):
-		print('%s[X%d < %.3f]' % ((depth*' ', (node['index']+1), node['value'])))
-		print_tree(node['left'], depth+1)
-		print_tree(node['right'], depth+1)
-	else:
-		print('%s[%s]' % ((depth*' ', node)))
+def getErrorRate(tree, data):
+    """
+    Utilizes decision tree to check decision tree accuracy.
+
+    @param tree: The decision tree
+    @param data: The dataset
+    @returns: The error percentage
+    """
+    correct = 0
+    for row in data:
+        prediction = makePrediction(tree, row)
+        if prediction == row[-1]:
+            correct += 1
+    return 1 - (correct / len(data))
+
+
+def makePrediction(treeNode, row):
+    """
+    Recursively iterate through three to make a prediction.
+
+    @param treeNode: The current node in decision tree
+    @param row: The current row in data set
+    @return: The prediction
+    """
+    if row[treeNode["index"]] < treeNode["value"]:
+        if isinstance(treeNode["left"], dict):
+            return makePrediction(treeNode["left"], row)
+        else:
+            return treeNode["left"]
+    else:
+        if isinstance(treeNode["right"], dict):
+            return makePrediction(treeNode["right"], row)
+        else:
+            return treeNode["right"]
+
+def printTree(treeNode, depth=0):
+    """
+    Prints decision tree for visual observation
+    http://machinelearningmastery.com/implement-decision-tree-algorithm-scratch-python/
+    """
+    if isinstance(treeNode, dict):
+        print("%s{X%d = %.4f}" % ((depth*str(depth), (treeNode["index"] + 1), treeNode["value"])))
+        printTree(treeNode["left"], depth + 1)
+        printTree(treeNode["right"], depth + 1)
+    else:
+        print("%s{%s}" % ((depth * "*", treeNode)))
+
+
+def createDecisionStump(trainingData, testingData):
+    """
+    Part 2 Problem 1 - Create decision stump and display associated values
+
+    @param trainingData: The training dataset
+    @param testingData: The testing dataset
+    """
+    tree = createTree(trainingData, 1, 10)
+    print("PART 2 PROBLEM 1")
+    print("Learned Stump:")
+    printTree(tree)
+    print("\n")
+    print("Information Gain: " + str(tree["infoGain"]))
+    print("Training Error Rate: " + str(getErrorRate(tree, trainingData)))
+    print("Testing Error Rate: " + str(getErrorRate(tree, testingData)))
