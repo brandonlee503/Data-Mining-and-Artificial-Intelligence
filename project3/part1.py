@@ -22,11 +22,14 @@ def part1Problem2(XTrain, YTrain, XTest, YTest):
     # Compute for testing set
     computeCorrect(XTrain, YTrain, XTest, YTest, testResults)
 
+    nicePrint(trainResults, './trainingAccuracy.txt')
+    nicePrint(testResults, './testingAccuracy.txt')
+
     # Compute for leave out one cross validation
-    for i, row in enumerate(XTrain):
-        crossValidation.append([])
-        computeCorrect(XTrain, YTrain, XTest, YTest, crossValidation[i])
-        print(i)
+    # for i, row in enumerate(XTrain):
+    #     crossValidation.append([])
+    #     computeCorrect(XTrain, YTrain, XTrain, YTrain, crossValidation[i])
+    #     print(crossValidation[i])
 
 # Compares model with dataset and calculates number of correct rows
 def computeCorrect(XTrain, YTrain, x, y, results):
@@ -39,7 +42,7 @@ def computeCorrect(XTrain, YTrain, x, y, results):
             result = sum(pair[0] for pair in row[:k])
             if result > 0 and y[j] == 1 or result < 0 and y[j] == -1:
                 correct += 1
-        results.append(correct)
+        results.append(correct / len(x))
 
     return results
 
@@ -70,3 +73,11 @@ def getData():
     XTest = np.array(testing[:,1:31])
     YTest = np.array(testing[:,0:1])
     return XTrain, YTrain, XTest, YTest
+
+def nicePrint(data, output = './error.txt'):
+    fp = open(output, 'w')
+    temp = ''
+
+    for i, result in enumerate(data):
+        temp = temp + '(' + str(i) + ',' + str(result) + ')\n'
+    fp.write(temp)

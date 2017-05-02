@@ -19,7 +19,7 @@ def main():
     XTrain /=  XTrain.sum(axis=1)[:,np.newaxis]
     XTest /=  XTest.sum(axis=1)[:,np.newaxis]
 
-    # part1Problem2(XTrain, YTrain, XTest, YTest)
+    part1Problem2(XTrain, YTrain, XTest, YTest)
     # foo = getBestSplit(XTrain, YTrain)
     # print(getBestSplit(XTrain, YTrain))
     # print('Split: [X%d < %.3f]' % ((foo['index']+1), foo['value']))
