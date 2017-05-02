@@ -27,8 +27,9 @@ def main():
     # foo = getBestSplit(TrainingData)
     # print(getBestSplit(TrainingData))
     # print('Split: [X%d < %.3f]' % ((foo['index']+1), foo['value']))
-    tree = createTree(TrainingData, 1, 1)
+    tree = createTree(TrainingData, 1, 10)
     print_tree(tree)
+
 
 # Parse CSV
 def getData():
