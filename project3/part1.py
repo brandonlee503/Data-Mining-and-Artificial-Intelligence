@@ -29,6 +29,7 @@ def part1Problem2(XTrain, YTrain, XTest, YTest):
     #     computeCorrect(XTrain, YTrain, XTrain, YTrain, crossValidation[i])
     #     print(crossValidation[i])
 
+
 # Compares model with dataset and calculates number of correct rows
 def computeCorrect(XTrain, YTrain, x, y, results):
     knn = [getKNN(XTrain, YTrain, row) for row in x]

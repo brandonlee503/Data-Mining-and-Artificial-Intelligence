@@ -27,6 +27,7 @@ def getGiniIndex(sections):
             gini += (ratio * (1.0 - ratio))
     return gini
 
+
 def getSplit(index, value, data):
     """
     Split data based off of attribute and value
@@ -43,6 +44,7 @@ def getSplit(index, value, data):
         else:
             right.append(row)
     return left, right
+
 
 def getBestSplit(data):
     """
@@ -72,7 +74,6 @@ def setMajorityClass(section):
     @return: Most common result class
     """
     majority = [row[-1] for row in section]
-    print(majority)
     return max(set(majority), key=majority.count)
 
 def splitTree(node, currentDepth, maxDepth, minSize):
@@ -91,9 +92,11 @@ def splitTree(node, currentDepth, maxDepth, minSize):
     # Check if there's no split
     if not left or not right:
         node["left"] = node["right"] = setMajorityClass(left + right)
+        return
     # Check if max depth has been reached
     if maxDepth <= currentDepth:
         node["left"], node["right"] = setMajorityClass(left), setMajorityClass(right)
+        return
     # Check left child
     if len(left) <= minSize:
         node["left"] = setMajorityClass(left)
@@ -106,6 +109,7 @@ def splitTree(node, currentDepth, maxDepth, minSize):
     else:
         node["right"] = getBestSplit(right)
         splitTree(node["right"], currentDepth + 1, maxDepth, minSize)
+
 
 def createTree(data, maxDepth, minSize):
     """
