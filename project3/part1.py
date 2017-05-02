@@ -9,8 +9,6 @@ import math
 from numpy import genfromtxt
 
 K = range(1, 52, 2)
-CLASS_VALUES = [-1, 1]
-
 
 def part1Problem2(XTrain, YTrain, XTest, YTest):
     testResults = []

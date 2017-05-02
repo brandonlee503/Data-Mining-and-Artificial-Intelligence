@@ -11,18 +11,23 @@ from numpy import genfromtxt
 from part1 import part1Problem2
 from part2 import getGiniIndex, getSplit, getBestSplit
 
-K = range(1, 52, 2)
-CLASS_VALUES = [-1, 1]
-
 def main():
+    # Seperate data and class values
     XTrain, YTrain, XTest, YTest = getData()
+
+    # Normalize Data
     XTrain /=  XTrain.sum(axis=1)[:,np.newaxis]
     XTest /=  XTest.sum(axis=1)[:,np.newaxis]
 
-    part1Problem2(XTrain, YTrain, XTest, YTest)
-    # foo = getBestSplit(XTrain, YTrain)
-    # print(getBestSplit(XTrain, YTrain))
-    # print('Split: [X%d < %.3f]' % ((foo['index']+1), foo['value']))
+    # Normalized data with class values
+    TrainingData = np.append(XTrain, YTrain, axis=1)
+    TestingData = np.append(XTest, YTest, axis=1)
+
+    # part1Problem2(XTrain, YTrain, XTest, YTest)
+    foo = getBestSplit(TrainingData)
+    # print(getBestSplit(TrainingData))
+    print('Split: [X%d < %.3f]' % ((foo['index']+1), foo['value']))
+
 
 # Parse CSV
 def getData():
