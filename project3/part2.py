@@ -105,3 +105,17 @@ def splitTree(node, currentDepth, maxDepth, minSize):
     else:
         node["right"] = getBestSplit(right)
         splitTree(node["right"], currentDepth + 1, maxDepth, minSize)
+
+def createTree(data, maxDepth, minSize):
+    """
+    Initializes tree with root node and recrusively calls splitTree() to build
+    decision tree for specified criteria.
+
+    @param data: The dataset
+    @param maxDepth: Maximum depth before setting majority class
+    @param minSize: Minimum # of rows before setting majority class
+    @returns: A decision tree
+    """
+    root = getSplit(data)
+    split(root, 1, maxDepth, minSize)
+    return root
