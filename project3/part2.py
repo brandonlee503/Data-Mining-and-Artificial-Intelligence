@@ -85,4 +85,23 @@ def splitTree(node, currentDepth, maxDepth, minSize):
     @param minSize: Minimum # of rows before setting majority class
     @returns: A recrusively built tree
     """
-    pass
+    left, right = node["groups"]
+    del(node["groups"])
+    # Check if there's no split
+    if not left or not right:
+        node["left"] = node["right"] = setMajorityClass(left + right)
+    # Check if max depth has been reached
+    if maxDepth <= depth:
+        node["left"], node["right"] = setMajorityClass(left), setMajorityClass(right)
+    # Check left child
+    if len(left) <= minSize:
+        node["left"] = setMajorityClass(left)
+    else:
+        node["left"] = getBestSplit(left)
+        splitTree(node["left"], currentDepth + 1, maxDepth, minSize)
+    # Check right child
+    if len(right) <= minSize:
+        node["right"] = setMajorityClass(right)
+    else:
+        node["right"] = getBestSplit(right)
+        splitTree(node["right"], currentDepth + 1, maxDepth, minSize)
