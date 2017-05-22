@@ -4,12 +4,16 @@ import csv
 import math
 from numpy import genfromtxt
 
+from itertools import combinations
+from functools import reduce
+
 MAX_ITER = 20
 
 def main():
     data = getData()
     kmeans(data, k=2)
 
+### PART 1
 
 def kmeans(data, k=2):
     """
@@ -124,6 +128,72 @@ def getCenters(data, labels, centers):
         newCenters.append(np.divide(row[0], row[1]))
 
     return newCenters
+
+### PART 2
+
+def hacDistanceFunc(data, pair, distanceFunction):
+    """
+    Calculates the distance with a specific distance function
+
+    @param data: List of points
+    @param pair: A pair of clusters
+    @param distanceFunction: A distance function
+    @returns: Distance between two clusters with a specific distance function
+    """
+    a = np.array([data[i] for i in pair[0]])
+    b = np.array([data[i] for i in pair[1]])
+    return distanceFunction(a, b)
+
+
+# https://elki-project.github.io/tutorial/hierarchical_clustering
+def HAC(data, distanceFunc, threshold):
+    """
+    Hierarchical agglomerative clustering algorithm
+
+    @param data: List of points
+    @param distanceFunc: Distance function
+    @param threshold: The threshold the tree is cut
+    @returns: A clustering hierarchy
+    """
+
+    # Initialize necessary labels and each into into its own cluster
+    labels = [0 for i in range(len(data))]
+    clusters = {(i, ) for i in range(len(data))}
+
+    j = len(clusters) + 1
+    while True:
+        clusterPairs = combinations(clusters, 2)
+
+        # Calculate distance of each cluster pair in the form of (pair, distance)
+        distanceScores = [(pair, hacDistanceFunc(data, pair, distanceFunc)) for pair in pairs]
+
+        # Determine which pair is merged through best distance
+        maximum = max(distanceScores, key=operator.itemgetter(1))
+
+        # Stop if distnce below threshold
+        if maximum[1] < threshold:
+            break
+
+        # Remove the pair that will be merged from cluster set, then merge/flatten them
+        pair = maximum[0]
+        clusters -= set(pair)
+        flatPair = reduce(lambda x,y: x + y, pair)
+
+        # Update labels for pair members
+        for i in flatPair:
+            labels[i] = j
+
+        # Add new cluster to clusters
+        clusters.add(flatPair)
+
+        # End if no more clusters
+        if len(clusters) == 1:
+            break
+
+        # Increment
+        j += 1
+
+    return labels
 
 
 if __name__ == '__main__':
