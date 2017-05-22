@@ -16,17 +16,17 @@ def part1Problem2(train, test):
     crossValidation = []
 
     # Compute for training set
-    print('Starting Part1: Using K=[1,3,5,...,51]')
-    print('Computing Accuracy of Training Data vs. Model')
+    print 'Starting Part1: Using K=[1,3,5,...,51]'
+    print 'Computing Accuracy of Training Data vs. Model'
     computeCorrect(train, train, trainResults)
-    print(trainResults)
+    print trainResults
     # Compute for testing set
-    print('\nComputing Accuracy of Testing Data vs. Model')
+    print '\nComputing Accuracy of Testing Data vs. Model'
     computeCorrect(train, test, testResults)
-    print(testResults)
+    print testResults
 
     # Compute for leave out one cross validation
-    print('\nComputing Leave One Out Cross Validation')
+    print '\nComputing Leave One Out Cross Validation'
     for i, row in enumerate(train):
         temp = np.copy(row)
         crossValidation.append([])
@@ -35,9 +35,9 @@ def part1Problem2(train, test):
         computeCorrectLeaveOneOut(train, temp, crossValidation[i])
         train = np.insert(train, i, temp, 0)
 
-    percentData = [val / 283 for val in np.sum(crossValidation, axis=0)]
-    print(percentData)
-    print('\n')
+    percentData = [float(val) / 283 for val in np.sum(crossValidation, axis=0)]
+    print percentData
+    print '\n'
 
 
 def computeCorrectLeaveOneOut(train, test, results):
@@ -64,7 +64,7 @@ def computeCorrect(train, test, results):
             result = sum(pair[0] for pair in row[:k])
             if result > 0 and test[j][-1] == 1 or result < 0 and test[j][-1] == -1:
                 correct += 1
-        results.append(correct / len(train))
+        results.append(float(correct) / len(train))
 
     return results
 

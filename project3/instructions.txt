@@ -1,0 +1,9 @@
+Requires:
+python 2.7
+numpy
+
+To Run:
+make
+
+
+Tested and works correctly on flip

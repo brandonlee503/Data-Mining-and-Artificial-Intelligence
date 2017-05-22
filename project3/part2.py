@@ -140,7 +140,7 @@ def getErrorRate(tree, data):
         prediction = makePrediction(tree, row)
         if prediction == row[-1]:
             correct += 1
-    return 1 - (correct / len(data))
+    return 1 - (float(correct) / len(data))
 
 
 def makePrediction(treeNode, row):
@@ -171,11 +171,11 @@ def printTree(treeNode, depth=0):
     @param depth: Current depth
     """
     if isinstance(treeNode, dict):
-        print("%s{X%d = %.4f}" % ((depth*str(depth), (treeNode["index"] + 1), treeNode["value"])))
+        print "%s{X%d = %.4f}" % ((depth*str(depth), (treeNode["index"] + 1), treeNode["value"]))
         printTree(treeNode["left"], depth + 1)
         printTree(treeNode["right"], depth + 1)
     else:
-        print("%s{%s}" % ((depth * "*", treeNode)))
+        print "%s{%s}" % ((depth * "*", treeNode))
 
 def printInfoGain(treeNode, depth=0):
     """
@@ -185,7 +185,7 @@ def printInfoGain(treeNode, depth=0):
     @param depth: Current depth
     """
     if isinstance(treeNode, dict):
-        print("Depth: " + str(depth) + " | Information Gain: " + str(treeNode["infoGain"]))
+        print "Depth: " + str(depth) + " | Information Gain: " + str(treeNode["infoGain"])
         printInfoGain(treeNode["left"], depth + 1)
         printInfoGain(treeNode["right"], depth + 1)
 
@@ -197,14 +197,14 @@ def createDecisionStump(trainingData, testingData):
     @param testingData: The testing dataset
     """
     tree = createTree(trainingData, 1, 10)
-    print("PART 2 PROBLEM 1")
-    print("Learned Stump:")
+    print "PART 2 PROBLEM 1"
+    print "Learned Stump:"
     printTree(tree)
-    print("\n")
-    print("Information Gain: " + str(tree["infoGain"]))
-    print("Training Error Rate: " + str(getErrorRate(tree, trainingData)))
-    print("Testing Error Rate: " + str(getErrorRate(tree, testingData)))
-    print("\n")
+    print "\n"
+    print "Information Gain: " + str(tree["infoGain"])
+    print "Training Error Rate: " + str(getErrorRate(tree, trainingData))
+    print "Testing Error Rate: " + str(getErrorRate(tree, testingData))
+    print "\n"
 
 def createDecisionTree(trainingData, testingData):
     """
@@ -215,12 +215,12 @@ def createDecisionTree(trainingData, testingData):
     """
     # Max depth of 6
     tree = createTree(trainingData, 6, 10)
-    print("PART 2 PROBLEM 2")
-    print("Learned Tree:")
+    print "PART 2 PROBLEM 2"
+    print "Learned Tree:"
     printTree(tree)
-    print("\n")
+    print "\n"
     # print("Information Gain: " + str(tree["infoGain"]))
     printInfoGain(tree)
-    print("Training Error Rate: " + str(getErrorRate(tree, trainingData)))
-    print("Testing Error Rate: " + str(getErrorRate(tree, testingData)))
-    print("\n")
+    print "Training Error Rate: " + str(getErrorRate(tree, trainingData))
+    print "Testing Error Rate: " + str(getErrorRate(tree, testingData))
+    print "\n"
