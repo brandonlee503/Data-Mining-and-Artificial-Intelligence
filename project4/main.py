@@ -12,6 +12,13 @@ def main():
 
 
 def kmeans(data, k=2):
+    """
+    Implementation of the k means algorithm
+
+    @param data: List of data points
+    @param k: Number of clusters
+    @returns: Classified cluster data points
+    """
     count = 0
     centers = randCenters(data, k)
     oldCenters = None
@@ -27,22 +34,45 @@ def kmeans(data, k=2):
 
 
 def randCenters(data, k):
+    """
+    Initialize center points with random values
+
+    @param data: List of data points
+    @param k: Number of clusters
+    @returns: List of randomized center points
+    """
     return [data[np.random.randint(0, len(data), size=1)].flatten() for i in range(k)]
 
 
 def converged(oldCenters, centers, count):
+    """
+    Checks if the center points have converged
+
+    @param oldCenters: List of previous center points
+    @param centers: Current center points
+    @param count: Current number of iterations
+    @returns: Bool
+    """
     if oldCenters != None:
         return True if count >= MAX_ITER or np.array_equal(oldCenters, centers) else False
 
     return False
 
-
-# Parse CSV
 def getData():
+    """
+    Parses CSV for relevant data
+    """
     return genfromtxt('data-1.txt', delimiter=',')
 
 
 def getLabels(data, centers):
+    """
+    Assign data points to the k clusters based off of center points
+
+    @param data: The list of data points
+    @param centers: The list of center points
+    @returns: List of labeled data points to clusters
+    """
     labels = []
 
     for i, row in enumerate(data):
@@ -61,10 +91,25 @@ def getLabels(data, centers):
 
 
 def dist(row, center):
+    """
+    Calculates euclidean distance between two data points
+
+    @param row: The data point
+    @param center: The cluster center
+    @returns Float representation of euclidean distance
+    """
     return np.linalg.norm(row - center)
 
 
 def getCenters(data, labels, centers):
+    """
+    Calculates updated center values for the k clusters
+
+    @param data: The data set
+    @param labels: Indicator for which cluster each row (point) sits at
+    @param centers: List of center points
+    @returns: An updated list of center points
+    """
     sums = []
     newCenters = []
 
