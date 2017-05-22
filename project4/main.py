@@ -11,7 +11,8 @@ MAX_ITER = 20
 
 def main():
     data = getData()
-    kmeans(data, k=2)
+    # kmeans(data, k=2)
+    HAC(data, 0, 100)
 
 ### PART 1
 
@@ -131,18 +132,49 @@ def getCenters(data, labels, centers):
 
 ### PART 2
 
+def singleLinkDistance(clusterA, clusterB):
+    """
+    Compute distance between two clusters through single link
+
+    @param clusterA: List of points for cluster A
+    @param clusterB: List of points for cluster B
+    @returns: Single link Euclidean distance
+    """
+    allPairs = []
+    for i in clusterA:
+        for j in clusterB:
+            allPairs.append(dist(i, j))
+    return min(allPairs)
+
+def completeLinkDistance(clusterA, clusterB):
+    """
+    Compute distance between two clusters through complete link
+
+    @param clusterA: List of points for cluster A
+    @param clusterB: List of points for cluster B
+    @returns: Complete link Euclidean distance
+    """
+    allPairs = []
+    for i in clusterA:
+        for j in clusterB:
+            allPairs.append(dist(i, j))
+    return max(allPairs)
+
 def hacDistanceFunc(data, pair, distanceFunction):
     """
     Calculates the distance with a specific distance function
 
     @param data: List of points
     @param pair: A pair of clusters
-    @param distanceFunction: A distance function
+    @param distanceFunction: A distance function (0 for single, 1 for complete)
     @returns: Distance between two clusters with a specific distance function
     """
     a = np.array([data[i] for i in pair[0]])
     b = np.array([data[i] for i in pair[1]])
-    return distanceFunction(a, b)
+    if distanceFunction == 0:
+        return singleLinkDistance(a, b)
+    else:
+        return completeLinkDistance(a, b)
 
 
 # https://elki-project.github.io/tutorial/hierarchical_clustering
@@ -151,7 +183,7 @@ def HAC(data, distanceFunc, threshold):
     Hierarchical agglomerative clustering algorithm
 
     @param data: List of points
-    @param distanceFunc: Distance function
+    @param distanceFunc: Distance function (0 for single, 1 for complete)
     @param threshold: The threshold the tree is cut
     @returns: A clustering hierarchy
     """
@@ -165,7 +197,7 @@ def HAC(data, distanceFunc, threshold):
         clusterPairs = combinations(clusters, 2)
 
         # Calculate distance of each cluster pair in the form of (pair, distance)
-        distanceScores = [(pair, hacDistanceFunc(data, pair, distanceFunc)) for pair in pairs]
+        distanceScores = [(pair, hacDistanceFunc(data, pair, distanceFunc)) for pair in clusterPairs]
 
         # Determine which pair is merged through best distance
         maximum = max(distanceScores, key=operator.itemgetter(1))
