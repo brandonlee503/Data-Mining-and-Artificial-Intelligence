@@ -8,11 +8,7 @@ MAX_ITER = 20
 
 def main():
     data = getData()
-    # kmeans(data, k=2)
-
-    #### TESTING
-    print(getLabels(data, randCenters(data, 2)))
-    ####
+    kmeans(data, k=2)
 
 
 def kmeans(data, k=2):
@@ -21,21 +17,24 @@ def kmeans(data, k=2):
     oldCenters = None
     labels = []
 
-    print(centers)
     while not converged(oldCenters, centers, count):
         oldCenters = centers
         count += 1
 
         labels = getLabels(data, centers)
         centers = getCenters(data, labels, centers)
+    print(centers)
 
 
 def randCenters(data, k):
-    return [data[np.random.randint(0, len(data), size=1)].flatten().tolist() for i in range(k)]
+    return [data[np.random.randint(0, len(data), size=1)].flatten() for i in range(k)]
 
 
 def converged(oldCenters, centers, count):
-    return True if count >= MAX_ITER or oldCenters == centers else False
+    if oldCenters != None:
+        return True if count >= MAX_ITER or np.array_equal(oldCenters, centers) else False
+
+    return False
 
 
 # Parse CSV
@@ -66,14 +65,18 @@ def dist(row, center):
 
 
 def getCenters(data, labels, centers):
-    sums = tuple([np.zeroes(len(centers), data.shape[1])], 0)
+    sums = []
     newCenters = []
 
+    for i, center in enumerate(centers):
+        sums.append([np.zeros(data.shape[1]).flatten(), 0])
+
     for i, label in enumerate(labels):
-        sums[label][0] += data[i]
+        sums[label][0] = np.add(sums[label][0], data[i])
         sums[label][1] += 1
+
     for i, row in enumerate(sums):
-        newCenters.append(row[0] / row[1])
+        newCenters.append(np.divide(row[0], row[1]))
 
     return newCenters
 
