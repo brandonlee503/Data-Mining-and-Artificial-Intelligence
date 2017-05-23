@@ -95,12 +95,10 @@ def HAC(data, distanceFunc, threshold):
             if pair not in distanceScores or False:
                 distanceScores[pair] = hacDistanceFunc(data, pair, distanceFunc)
         # distanceScores = [(pair, hacDistanceFunc(data, pair, distanceFunc)) for pair in clusterPairs]
-        print("distance score")
-        print(distanceScores)
+        print("distance score\n{0}".format(distanceScores))
         # Determine which pair is merged through best distance
         maximum = max(distanceScores, key=operator.itemgetter(1))
-        print("max:")
-        print(maximum)
+        print("max\n{0}".format(maximum))
         # Stop if distance below threshold
         if distanceScores[maximum] < threshold:
             break
@@ -108,14 +106,12 @@ def HAC(data, distanceFunc, threshold):
         # Remove the pair that will be merged from cluster set, then merge/flatten them
         pair = maximum
 
-        print("pair")
-        print(pair)
+        print("pair\n{0}".format(pair))
 
         clusters -= set(pair)
         flatPair = reduce(lambda x,y: x + y, pair)
 
-        print("flatPair:")
-        print(flatPair)
+        print("flatPair\n{0}".format(flatPair))
 
         # Update labels for pair members
         for i in flatPair:
@@ -124,17 +120,14 @@ def HAC(data, distanceFunc, threshold):
         # Add new cluster to clusters
         clusters.add(flatPair)
 
-        print("cluster lens")
-        print(len(clusters))
+        print("cluster lens\n{0}".format(len(clusters)))
 
         # End if no more clusters
         if len(clusters) == 1:
             break
 
-        print("LABELS")
-        print(labels)
-        print("INTERATION")
-        print(j)
+        print("LABELS\n{0}".format(labels))
+        print("INTERATION\n{0}".format(j))
         # Increment
         j += 1
 
