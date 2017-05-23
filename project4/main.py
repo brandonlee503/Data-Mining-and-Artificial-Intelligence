@@ -11,7 +11,7 @@ from part2 import part2
 from shared import getData
 
 def main():
-    fName = 'data-1.txt'
+    fName = 'data-2.txt'
     try:
         fName=sys.argv[1]
     except Exception as e:

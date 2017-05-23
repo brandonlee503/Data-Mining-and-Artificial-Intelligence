@@ -11,7 +11,7 @@ def dist(row, center):
     """
     return np.linalg.norm(row - center)
 
-def getData(fName='data-1.txt'):
+def getData(fName='data-2.txt'):
     """
     Parses CSV for relevant data
     """
