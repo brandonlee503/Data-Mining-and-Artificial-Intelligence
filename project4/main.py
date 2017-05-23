@@ -4,11 +4,20 @@ import csv
 import math
 from numpy import genfromtxt
 
-MAX_ITER = 20
+MAX_ITER = 1000
 
 def main():
-    data = getData()
-    kmeans(data, k=2)
+    fName = 'data-1.txt'
+    try:
+        fName=sys.argv[1]
+    except Exception as e:
+        print('No data file provided, defaulting to {0}'.format(fName))
+    data = getData(fName)
+
+    print('\nStarting Problem 1.1')
+    SSEs, labels, centers, iterations = kmeans(data, k=4)
+
+    print('\nStarting Problem 1.2')
 
 
 def kmeans(data, k=2):
@@ -23,14 +32,29 @@ def kmeans(data, k=2):
     centers = randCenters(data, k)
     oldCenters = None
     labels = []
+    SSEs = [[] for i in range(k)]
 
+    print('Calculating k-means for k={0}'.format(k))
     while not converged(oldCenters, centers, count):
         oldCenters = centers
         count += 1
-
         labels = getLabels(data, centers)
         centers = getCenters(data, labels, centers)
-    print(centers)
+
+        calcSSE(labels, centers, SSEs, data, k)
+
+    return SSEs, labels, centers, count
+    print('Converged after {0} iteration(s)'.format(count))
+
+
+def calcSSE(labels, centers, SSEs, data, k):
+    values = [[] for i in range(k)]
+
+    for row, label in enumerate(labels):
+        values[label].append(data[row])
+
+    for i, value in enumerate(values):
+        SSEs[i].append(np.sum((values[i] - centers[i])**2))
 
 
 def randCenters(data, k):
@@ -58,11 +82,12 @@ def converged(oldCenters, centers, count):
 
     return False
 
-def getData():
+def getData(fName='data-1.txt'):
     """
     Parses CSV for relevant data
     """
-    return genfromtxt('data-1.txt', delimiter=',')
+    print('Loading data...')
+    return genfromtxt(fName, delimiter=',')
 
 
 def getLabels(data, centers):
@@ -84,7 +109,7 @@ def getLabels(data, centers):
 
             if cur < prev:
                 best = cKey
-            prev = cur
+                prev = cur
         labels.append(best)
 
     return labels
@@ -112,6 +137,9 @@ def getCenters(data, labels, centers):
     """
     sums = []
     newCenters = []
+    for i in range(len(centers)):
+        if labels.count(i) == 0:
+            centers[i] = np.random.randint(0, len(data), size=1)
 
     for i, center in enumerate(centers):
         sums.append([np.zeros(data.shape[1]).flatten(), 0])
