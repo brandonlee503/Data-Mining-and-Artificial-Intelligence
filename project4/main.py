@@ -8,6 +8,7 @@ from functools import reduce
 
 from part1 import part1
 from part2 import part2
+from part2_test import part2Test
 from shared import getData
 
 def main():
@@ -19,10 +20,11 @@ def main():
     data = getData(fName)
 
     # Part1
-    part1(data)
+    # part1(data)
 
     # Part2
     part2(data[0:5], 0, 100)
+    # part2Test(data)
 
 
 if __name__ == '__main__':
