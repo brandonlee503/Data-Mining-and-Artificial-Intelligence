@@ -3,133 +3,119 @@ import math
 import operator
 from itertools import combinations
 from functools import reduce
-
 from shared import dist
 
-def part2(data, distanceFunc, threshold):
+def part2(data):
     print('\nStarting Problem 2.1')
-    HAC(data, distanceFunc, threshold)
+    singleHAC(data)
+
+    print('\nStarting Problem 2.2')
+    completeHAC(data)
 
 
-def singleLinkDistance(clusterA, clusterB):
+def singleHAC(data):
     """
-    Compute distance between two clusters through single link
-
-    @param clusterA: List of points for cluster A
-    @param clusterB: List of points for cluster B
-    @returns: Single link Euclidean distance
-    """
-    # allPairs = {}
-    # for i in clusterA:
-    #     for j in clusterB:
-    #         if (i, j) not in allPairs:
-    #             allPairs[(i,j)] = dist(i, j)
-    # return min(allPairs)
-    allPairs = []
-    for i in clusterA:
-        for j in clusterB:
-            allPairs.append(dist(i, j))
-    return min(allPairs)
-
-
-def completeLinkDistance(clusterA, clusterB):
-    """
-    Compute distance between two clusters through complete link
-
-    @param clusterA: List of points for cluster A
-    @param clusterB: List of points for cluster B
-    @returns: Complete link Euclidean distance
-    """
-    allPairs = []
-    for i in clusterA:
-        for j in clusterB:
-            allPairs.append(dist(i, j))
-    return max(allPairs)
-
-
-def hacDistanceFunc(data, pair, distanceFunction):
-    """
-    Calculates the distance with a specific distance function
+    Single Hierarchical agglomerative clustering algorithm
 
     @param data: List of points
-    @param pair: A pair of clusters
-    @param distanceFunction: A distance function (0 for single, 1 for complete)
-    @returns: Distance between two clusters with a specific distance function
-    """
-    a = np.array([data[i] for i in pair[0]])
-    b = np.array([data[i] for i in pair[1]])
-    if distanceFunction == 0:
-        return singleLinkDistance(a, b)
-    else:
-        return completeLinkDistance(a, b)
-
-
-# https://elki-project.github.io/tutorial/hierarchical_clustering
-def HAC(data, distanceFunc, threshold):
-    """
-    Hierarchical agglomerative clustering algorithm
-
-    @param data: List of points
-    @param distanceFunc: Distance function (0 for single, 1 for complete)
-    @param threshold: The threshold the tree is cut
     @returns: A clustering hierarchy
     """
 
-    # Initialize necessary labels and each object into its own cluster
-    labels = [0 for i in range(len(data))]
-    clusters = {(i, ) for i in range(len(data))}
-    print(clusters)
-    j = len(clusters) + 1
-    distanceScores = {}
+    # Initialize necessary variables
+    clusters = []
+    distances = np.zeros((data.shape[0], data.shape[0]))
+    distances.fill(np.inf)
 
-    while True:
-        clusterPairs = combinations(clusters, 2)
-        # print("clusterpairs")
-        # for x in clusterPairs:
-        #    print(x)
+    # Each object into its own cluster
+    for i in range(data.shape[0]):
+        clusters.append([i])
 
-        # Calculate distance of each cluster pair in the form of (pair, distance)
+    # Calculate the distances between each cluster
+    for i in range(len(clusters)):
+        for j in range(i + 1, len(clusters)):
+            distances[i][j] = dist(data[i], data[j])
 
-        # Evaluate distance between pairs, memo existing
-        for pair in clusterPairs:
-            if pair not in distanceScores or False:
-                distanceScores[pair] = hacDistanceFunc(data, pair, distanceFunc)
-        # distanceScores = [(pair, hacDistanceFunc(data, pair, distanceFunc)) for pair in clusterPairs]
-        print("distance score\n{0}".format(distanceScores))
-        # Determine which pair is merged through best distance
-        maximum = max(distanceScores, key=operator.itemgetter(1))
-        print("max\n{0}".format(maximum))
-        # Stop if distance below threshold
-        if distanceScores[maximum] < threshold:
-            break
+    # Repeat until only one cluster remaining
+    while distances.shape[1] > 1:
+        ci = 0
+        cj = 0
 
-        # Remove the pair that will be merged from cluster set, then merge/flatten them
-        pair = maximum
+        # Obtain minimum distance pair clusters
+        indexes = distances.argmin()
+        dimensions = distances.shape
+        ci, cj = np.unravel_index(indexes, dimensions)
+        distance = np.min(distances)
+        distances[ci, cj] = np.inf
 
-        print("pair\n{0}".format(pair))
+        # Create new distances without old union clusters
+        newDistances = distances
+        newDistances = np.delete(newDistances, [ci, cj], axis=0)
+        newDistances = np.delete(newDistances, [ci, cj], axis=1)
 
-        clusters -= set(pair)
-        flatPair = reduce(lambda x,y: x + y, pair)
+        # Add single union cluster
+        unionCluster = np.zeros(newDistances.shape[1])
+        newDistances = np.vstack([newDistances, unionCluster])
 
-        print("flatPair\n{0}".format(flatPair))
+        # Compute the new distance between the union cluster to the other clusters
+        for i in range(newDistances.shape[1]):
+            newDistances[-1][i] = min(distances[ci][i], distances[cj][i])
 
-        # Update labels for pair members
-        for i in flatPair:
-            labels[i] = j
+        distances = newDistances
 
-        # Add new cluster to clusters
-        clusters.add(flatPair)
+        # Get 10 clusters
+        if distances.shape[1] < 11:
+            print("Cluster A: {0} | Cluster B: {1} | Height: {2} | Distance: {3}".format(ci, cj, distances.shape[1], distance))
 
-        print("cluster lens\n{0}".format(len(clusters)))
 
-        # End if no more clusters
-        if len(clusters) == 1:
-            break
+def completeHAC(data):
+    """
+    Complete Hierarchical agglomerative clustering algorithm
 
-        print("LABELS\n{0}".format(labels))
-        print("INTERATION\n{0}".format(j))
-        # Increment
-        j += 1
+    @param data: List of points
+    @returns: A clustering hierarchy
+    """
 
-    print(labels)
-    return labels
+    # Initialize necessary variables
+    clusters = []
+    distances = np.zeros((data.shape[0], data.shape[0]))
+    # distances.fill(np.inf)
+
+    # Each object into its own cluster
+    for i in range(data.shape[0]):
+        clusters.append([i])
+
+    # Calculate the distances between each cluster
+    for i in range(len(clusters)):
+        for j in range(i + 1, len(clusters)):
+            distances[i][j] = dist(data[i], data[j])
+
+    # Repeat until only one cluster remaining
+    while distances.shape[1] > 1:
+        ci = 0
+        cj = 0
+
+        # Obtain maximum distance pair clusters
+        indexes = distances.argmax()
+        dimensions = distances.shape
+        ci, cj = np.unravel_index(indexes, dimensions)
+        distance = np.max(distances)
+        distances[ci, cj] = 0
+
+        # Create new distances without old union clusters
+        newDistances = distances
+        newDistances = np.delete(newDistances, [ci, cj], axis=0)
+        newDistances = np.delete(newDistances, [ci, cj], axis=1)
+
+        # Add single union cluster
+        unionCluster = np.zeros(newDistances.shape[1])
+        newDistances = np.vstack([newDistances, unionCluster])
+
+        # Compute the new distance between the union cluster to the other clusters
+        for i in range(newDistances.shape[1]):
+            newDistances[-1][i] = max(distances[ci][i], distances[cj][i])
+
+        distances = newDistances
+
+        # Get 10 clusters
+        if distances.shape[1] < 11:
+            print("Cluster A: {0} | Cluster B: {1} | Height: {2} | Distance: {3}".format(ci, cj, distances.shape[1], distance))

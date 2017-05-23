@@ -22,7 +22,7 @@ def main():
     part1(data)
 
     # Part2
-    part2(data[0:5], 0, 100)
+    part2(data)
 
 
 if __name__ == '__main__':
