@@ -17,15 +17,42 @@ def main():
     data = getData(fName)
 
     print('\nStarting Problem 1.1')
-    SSEs, labels, centers, iterations = kmeans(data, k=4)
+    SSEs, labels, centers, iterations = kmeans(data, k=2)
+    totalSSEs = []
+    for i in range(iterations):
+        tempVal = 0
+        for j, SSE in enumerate(SSEs):
+            tempVal += SSE[i]
+        totalSSEs.append(tempVal)
+
+    for SSE in totalSSEs:
+        print(SSE)
 
     print('\nStarting Problem 1.2')
+    # minSSEs = []
+    #
+    # for k in range(2, 11):
+    #     minSSE = math.inf
+    #     for i in range(10):
+    #         SSEs, labels, centers, iterations = kmeans(data, k=k)
+    #         minSSE = min(calcTotalSSE(SSEs, iterations - 1), minSSE)
+    #     minSSEs.append(minSSE)
+    #
+    # for minSSE in minSSEs:
+    #     print(minSSE)
 
     print('\nStarting Problem 2.1')
-    HAC(data, 0, 100)
+    # HAC(data, 0, 100)
+
+def calcTotalSSE(SSEs, iteration):
+    tempVal = 0
+
+    for j, SSE in enumerate(SSEs):
+        tempVal += SSE[iteration]
+    return tempVal
+
 
 ### PART 1
-
 def kmeans(data, k=2):
     """
     Implementation of the k means algorithm
