@@ -2,6 +2,7 @@ import sys
 import numpy as np
 import csv
 import math
+import operator
 from numpy import genfromtxt
 from itertools import combinations
 from functools import reduce
@@ -17,12 +18,14 @@ def main():
     data = getData(fName)
 
     print('\nStarting Problem 1.1')
-    SSEs, labels, centers, iterations = kmeans(data, k=4)
+    # SSEs, labels, centers, iterations = kmeans(data, k=4)
 
     print('\nStarting Problem 1.2')
 
     print('\nStarting Problem 2.1')
-    HAC(data, 0, 100)
+    # kmeans(data, k=2)
+    print(data[0:2])
+    HAC(data[0:5], 0, 100)
 
 ### PART 1
 
@@ -168,6 +171,12 @@ def singleLinkDistance(clusterA, clusterB):
     @param clusterB: List of points for cluster B
     @returns: Single link Euclidean distance
     """
+    # allPairs = {}
+    # for i in clusterA:
+    #     for j in clusterB:
+    #         if (i, j) not in allPairs:
+    #             allPairs[(i,j)] = dist(i, j)
+    # return min(allPairs)
     allPairs = []
     for i in clusterA:
         for j in clusterB:
@@ -216,28 +225,47 @@ def HAC(data, distanceFunc, threshold):
     @returns: A clustering hierarchy
     """
 
-    # Initialize necessary labels and each into into its own cluster
+    # Initialize necessary labels and each object into its own cluster
     labels = [0 for i in range(len(data))]
     clusters = {(i, ) for i in range(len(data))}
-
+    print(clusters)
     j = len(clusters) + 1
+    distanceScores = {}
+
     while True:
         clusterPairs = combinations(clusters, 2)
+        # print("clusterpairs")
+        # for x in clusterPairs:
+        #    print(x)
 
         # Calculate distance of each cluster pair in the form of (pair, distance)
-        distanceScores = [(pair, hacDistanceFunc(data, pair, distanceFunc)) for pair in clusterPairs]
 
+        # Evaluate distance between pairs, memo existing
+        for pair in clusterPairs:
+            if pair not in distanceScores or False:
+                distanceScores[pair] = hacDistanceFunc(data, pair, distanceFunc)
+        # distanceScores = [(pair, hacDistanceFunc(data, pair, distanceFunc)) for pair in clusterPairs]
+        print("distance score")
+        print(distanceScores)
         # Determine which pair is merged through best distance
         maximum = max(distanceScores, key=operator.itemgetter(1))
-
-        # Stop if distnce below threshold
-        if maximum[1] < threshold:
+        print("max:")
+        print(maximum)
+        # Stop if distance below threshold
+        if distanceScores[maximum] < threshold:
             break
 
         # Remove the pair that will be merged from cluster set, then merge/flatten them
-        pair = maximum[0]
+        pair = maximum
+
+        print("pair")
+        print(pair)
+
         clusters -= set(pair)
         flatPair = reduce(lambda x,y: x + y, pair)
+
+        print("flatPair:")
+        print(flatPair)
 
         # Update labels for pair members
         for i in flatPair:
@@ -246,13 +274,21 @@ def HAC(data, distanceFunc, threshold):
         # Add new cluster to clusters
         clusters.add(flatPair)
 
+        print("cluster lens")
+        print(len(clusters))
+
         # End if no more clusters
         if len(clusters) == 1:
             break
 
+        print("LABELS")
+        print(labels)
+        print("INTERATION")
+        print(j)
         # Increment
         j += 1
 
+    print(labels)
     return labels
 
 
