@@ -20,10 +20,11 @@ def main():
     data = getData(fName)
 
     # Part1
-    part1(data)
+    # part1(data)
 
     # Part2
-    part2(data)
+    # part2(data)
+    part2Test(data)
 
 
 if __name__ == '__main__':

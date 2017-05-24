@@ -1,4 +1,3 @@
-import numpy as np
 from numpy import genfromtxt
 
 def dist(row, center):
@@ -11,7 +10,7 @@ def dist(row, center):
     """
     return np.linalg.norm(row - center)
 
-def getData(fName='data-2.txt'):
+def getData(fName='data-1.txt'):
     """
     Parses CSV for relevant data
     """
