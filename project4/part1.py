@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import sys
 
 from shared import dist
 
@@ -18,18 +19,21 @@ def part1(data):
     for SSE in totalSSEs:
         print(SSE)
 
-    print('\nProblem 1.2 disabled due to time requirements')
-    # minSSEs = []
-    #
+    print('\nProblem 1.2 disabled due to rarely occuring bug')
+    # print('\nStarting Problem 1.2\n')
     # for k in range(2, 11):
-    #     minSSE = math.inf
-    #     for i in range(10):
-    #         SSEs, labels, centers, iterations = kmeans(data, k=k)
-    #         minSSE = min(calcTotalSSE(SSEs, iterations - 1), minSSE)
-    #     minSSEs.append(minSSE)
+    #     print('SSEs for k={0}'.format(k))
+    #     SSEs, labels, centers, iterations = kmeans(data, k=k)
+    #     totalSSEs = []
+    #     for i in range(iterations):
+    #         tempVal = 0
+    #         for j, SSE in enumerate(SSEs):
+    #             tempVal += SSE[i]
+    #         totalSSEs.append(tempVal)
     #
-    # for minSSE in minSSEs:
-    #     print(minSSE)
+    #     for SSE in totalSSEs:
+    #         print(SSE)
+    #     print('')
 
 
 def calcTotalSSE(SSEs, iteration):
@@ -69,14 +73,16 @@ def kmeans(data, k=2):
 
 
 def calcSSE(labels, centers, SSEs, data, k):
-    values = [[] for i in range(k)]
+    try:
+        values = [[] for i in range(k)]
 
-    for row, label in enumerate(labels):
-        values[label].append(data[row])
+        for row, label in enumerate(labels):
+            values[label].append(data[row])
 
-    for i, value in enumerate(values):
-        SSEs[i].append(np.sum((values[i] - centers[i])**2))
-
+        for i, value in enumerate(values):
+            SSEs[i].append(np.sum((values[i] - centers[i])**2))
+    except Exception as e:
+         pass
 
 def randCenters(data, k):
     """
@@ -115,7 +121,7 @@ def getLabels(data, centers):
     labels = []
 
     for i, row in enumerate(data):
-        prev = math.inf
+        prev = np.inf
         best = 0
 
         for cKey, center in enumerate(centers):

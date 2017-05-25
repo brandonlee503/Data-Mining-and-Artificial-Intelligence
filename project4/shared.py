@@ -1,4 +1,5 @@
 from numpy import genfromtxt
+import numpy as np
 
 def dist(row, center):
     """
