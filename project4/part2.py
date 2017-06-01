@@ -145,12 +145,21 @@ def printInfo(clusters, newCluster, bestDist):
     @param bestDist: Distance of the two clusters being merged
     """
 
-    print('{0} merged with {1} to form {2}'.format(newCluster.child1.label, newCluster.child2.label, newCluster.label))
-    print('Height:\t{0}'.format(len(clusters)))
-    print('Dist:\t{0}'.format(bestDist))
-    print('{0} size:\t{1}'.format(newCluster.child1.label, len(newCluster.child1.points)))
-    print('{0} size:\t{1}'.format(newCluster.child2.label, len(newCluster.child2.points)))
-    print('')
+    # print('{0} merged with {1} to form {2}'.format(newCluster.child1.label, newCluster.child2.label, newCluster.label))
+    print('{0} & {1} & {2} & {3} & {4} & {5} & {6} \\\\ \\hline'.format(
+        newCluster.child1.label,
+        newCluster.child2.label,
+        newCluster.label,
+        len(clusters),
+        bestDist,
+        len(newCluster.child1.points),
+        len(newCluster.child2.points)
+    ))
+    # print('Height: {0}, Dist: {1}, Size of {2}: {3}, Size of {4}: {5}'.format(len(clusters), bestDist, newCluster.child1.label, len(newCluster.child1.points), newCluster.child2.label, len(newCluster.child2.points)))
+    # print('Dist:\t{0}'.format(bestDist))
+    # print('{0} size:\t{1}'.format(newCluster.child1.label, len(newCluster.child1.points)))
+    # print('{0} size:\t{1}'.format(newCluster.child2.label, len(newCluster.child2.points)))
+    # print('')
 
 
 def findClosest(clusters, dist, prevC1, prevC2):

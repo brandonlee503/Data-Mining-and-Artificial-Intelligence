@@ -1,0 +1,8 @@
+To Run
+1. unzip
+2. run make
+
+Notes:
+Runs on flip.
+Part 1.2 was causing some errors every now and then so I disabled it, I think it has something 
+to do with clusters losing all their data points and not getting reinitialed properly. 
