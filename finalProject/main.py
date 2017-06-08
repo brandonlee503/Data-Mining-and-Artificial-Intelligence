@@ -45,7 +45,7 @@ def getData():
         training['q2_features'] = list(q2_vectors)
 
         # Save features
-        pd.to_pickle(df, 'data/1_df.pkl')
+        pd.to_pickle(training, 'data/1_df.pkl')
 
     return training.values, testing.values
 
