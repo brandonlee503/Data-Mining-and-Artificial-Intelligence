@@ -1,9 +1,12 @@
 import numpy as np
 import pandas as pd
 
+from test import run
+
 def main():
     # Seperate data and class values
     train, test = getData()
+    run(train[:,3:-1], train[:,-1])
 
 
 # Parse CSV
