@@ -62,18 +62,6 @@ def getData():
         foo.close()
         df = training
 
-    # Check and see if distances are lookin good
-    from scipy.spatial.distance import euclidean
-    vec1 = df[df['qid1']==97]['q1_features'].values
-    vec2 = df[df['qid2']==98]['q2_features'].values
-    dist = euclidean(vec1[0], vec2[0])
-    print("dist btw duplicate: %f" % (dist))
-
-    vec1 = df[df['qid1']==91]['q1_features'].values
-    vec2 = df[df['qid2']==92]['q2_features'].values
-    dist = euclidean(vec1[0], vec2[0])
-    print("dist btw non-duplicate: %f" % (dist))
-
     ### CREATE TRAINING DATA
 
     # Shuffle
@@ -113,12 +101,12 @@ def getData():
     del q2_feats
 
     ### TRAIN MODEL
-    net = create_network(300)
+    net = createNetwork(300)
 
     # train
     optimizer = SGD(lr=0.1, momentum=0.8, nesterov=True, decay=0.004)
     #optimizer = RMSprop(lr=0.001)
-    net.compile(loss=contrastive_loss, optimizer=optimizer)
+    net.compile(loss=getContrastiveLoss, optimizer=optimizer)
 
     for epoch in range(10):
         net.fit([X_train[:,0,:], X_train[:,1,:]], Y_train,
@@ -127,7 +115,7 @@ def getData():
 
         # compute final accuracy on training and test sets
         pred = net.predict([X_test[:,0,:], X_test[:,1,:]])
-        te_acc = compute_accuracy(pred, Y_test)
+        te_acc = getAccuracy(pred, Y_test)
 
         print('* Accuracy on test set: %0.2f%%' % (100 * te_acc))
 

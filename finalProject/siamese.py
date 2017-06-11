@@ -1,43 +1,45 @@
+# Brandon Lee / John Miller
+# References:
+# http://www.erogol.com/duplicate-question-detection-deep-learning/
 from __future__ import absolute_import
 from __future__ import print_function
-import numpy as np
 
+import numpy as np
 from keras.models import Sequential, Model
 from keras.layers import Dense, Dropout, Lambda, merge, BatchNormalization, Activation, Input, Merge
 from keras import backend as K
 
 
-def euclidean_distance(vects):
-    x, y = vects
+def getDistance(vectors):
+    """
+    Calculates euclidean distance between two vectors
+    """
+    x, y = vectors
     return K.sqrt(K.sum(K.square(x - y), axis=1, keepdims=True))
 
-def eucl_dist_output_shape(shapes):
-    shape1, shape2 = shapes
-    return (shape1[0], 1)
 
-def cosine_distance(vests):
-    x, y = vests
-    x = K.l2_normalize(x, axis=-1)
-    y = K.l2_normalize(y, axis=-1)
-    return -K.mean(x * y, axis=-1, keepdims=True)
+def getOutputShape(shapes):
+    """
+    Returns euclidean distance output shape
+    """
+    shapeA, shapeB = shapes
+    return (shapeA[0], 1)
 
-def cos_dist_output_shape(shapes):
-    shape1, shape2 = shapes
-    return (shape1[0],1)
 
-def contrastive_loss(y_true, y_pred):
-    '''Contrastive loss from Hadsell-et-al.'06
+def getContrastiveLoss(y_true, y_pred):
+    '''
+    Calculates Contrastive loss
     http://yann.lecun.com/exdb/publis/pdf/hadsell-chopra-lecun-06.pdf
     '''
     margin = 1
     return K.mean(y_true * K.square(y_pred) + (1 - y_true) * K.square(K.maximum(margin - y_pred, 0)))
 
 
-def create_base_network(input_dim):
+def createSubNetwork(inputShape):
     '''
-    Base network for feature extraction.
+    Creates a base network for feature extraction.
     '''
-    input = Input(shape=(input_dim, ))
+    input = Input(shape=(inputShape,))
     dense1 = Dense(128)(input)
     bn1 = BatchNormalization()(dense1)
     relu1 = Activation('relu')(bn1)
@@ -60,26 +62,31 @@ def create_base_network(input_dim):
     return model
 
 
-def compute_accuracy(predictions, labels):
+def getAccuracy(predictions, labels):
     '''
-    Compute classification accuracy with a fixed threshold on distances.
+    Calculate classification accuracy through fixed threshold on distances.
     '''
     return labels[predictions.ravel() < 0.5].mean()
 
-def create_network(input_dim):
-    # network definition
-    base_network = create_base_network(input_dim)
 
-    input_a = Input(shape=(input_dim,))
-    input_b = Input(shape=(input_dim,))
+def createNetwork(inputShape):
+    """
+    Create siamese network with subnetworks
+    """
 
-    # because we re-use the same instance `base_network`,
+    # Define network
+    baseNetwork = createSubNetwork(inputShape)
+
+    input_a = Input(shape=(inputShape,))
+    input_b = Input(shape=(inputShape,))
+
+    # because we re-use the same instance `baseNetwork`,
     # the weights of the network
     # will be shared across the two branches
-    processed_a = base_network(input_a)
-    processed_b = base_network(input_b)
+    processed_a = baseNetwork(input_a)
+    processed_b = baseNetwork(input_b)
 
-    distance = Lambda(euclidean_distance, output_shape=eucl_dist_output_shape)([processed_a, processed_b])
+    distance = Lambda(getDistance, output_shape=getOutputShape)([processed_a, processed_b])
 
     model = Model(input=[input_a, input_b], output=distance)
     return model
