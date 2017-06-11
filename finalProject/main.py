@@ -13,7 +13,6 @@ from keras.optimizers import RMSprop, SGD
 def main():
     # Seperate data and class values
     train, test = getData()
-    print train[2]
 
 
 def getData():
