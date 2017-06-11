@@ -30,8 +30,8 @@ def getData():
 
     # Encode questions to unicode
     print 'Encode to Unicode'
-    training['question1'] = training['question1'].apply(lambda x: unicode(str(x),"utf-8"))
-    training['question2'] = training['question2'].apply(lambda x: unicode(str(x),"utf-8"))
+    training['question1'] = training['question1'].apply(lambda x: unicode(str(x), "utf-8"))
+    training['question2'] = training['question2'].apply(lambda x: unicode(str(x), "utf-8"))
 
     #TODO: Encode Testing data
 
@@ -83,7 +83,6 @@ def getData():
     num_test = df.shape[0] - num_train
     print("Number of training pairs: %i"%(num_train))
     print("Number of testing pairs: %i"%(num_test))
-
 
     # init data data arrays
     X_train = np.zeros([num_train, 2, 300])
