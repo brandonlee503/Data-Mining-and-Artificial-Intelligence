@@ -1,2 +1,2 @@
-# Data-Mining-and-Artificial-Intelligence
-Classwork for CS 434 Data Mining and Artificial Intelligence
+# Machine Learning and Data Mining
+Classwork for CS 434 Machine Learning and Data Mining 
