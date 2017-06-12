@@ -8,6 +8,7 @@ from __future__ import print_function
 import numpy as np
 from keras.models import Sequential, Model
 from keras.layers import Dense, Dropout, Lambda, merge, BatchNormalization, Activation, Input, Merge
+from keras.layers.merge import add, concatenate
 from keras import backend as K
 
 
@@ -52,20 +53,20 @@ def createSubNetwork(inputShape):
     # Initialize layer 2
     dense2 = Dense(128)(relu1)
     bn2 = BatchNormalization()(dense2)
-    res2 = merge([relu1, bn2], mode='sum')
+    res2 = add([relu1, bn2])
     relu2 = Activation('relu')(res2)
 
     # Initialize layer 3
     dense3 = Dense(128)(relu2)
     bn3 = BatchNormalization()(dense3)
-    res3 = Merge(mode='sum')([relu2, bn3])
+    res3 = add([relu2, bn3])
     relu3 = Activation('relu')(res3)
 
     # Merge everything and normalize one final time
-    feats = merge([relu3, relu2, relu1], mode='concat')
+    feats = concatenate([relu3, relu2, relu1])
     bn4 = BatchNormalization()(feats)
 
-    return Model(input=input, output=bn4)
+    return Model(outputs=bn4, inputs=input)
 
 
 def getAccuracy(predictions, labels):
@@ -92,4 +93,4 @@ def createNetwork(inputShape):
 
     # Evaluate distance
     distance = Lambda(getDistance, output_shape=getOutputShape)([processedA, processedB])
-    return Model(input=[inputA, inputB], output=distance)
+    return Model(inputs=[inputA, inputB], outputs=distance)

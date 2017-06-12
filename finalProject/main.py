@@ -121,7 +121,7 @@ def trainModel():
         net.compile(loss=getContrastiveLoss, optimizer=optimizer)
 
         for epoch in range(10):
-            net.fit([xTrain[:,0,:], xTrain[:,1,:]], yTrain, validation_data=([xTest[:,0,:], xTest[:,1,:]], yTest), batch_size=128, nb_epoch=1, shuffle=True)
+            net.fit([xTrain[:,0,:], xTrain[:,1,:]], yTrain, validation_data=([xTest[:,0,:], xTest[:,1,:]], yTest), batch_size=128, epochs=1, shuffle=True)
 
             # compute final accuracy on training and test sets
             prediction = net.predict([xTest[:,0,:], xTest[:,1,:]])
