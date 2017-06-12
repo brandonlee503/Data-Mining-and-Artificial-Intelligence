@@ -143,7 +143,7 @@ def testModel():
     testingDF['question1'] = testingDF['question1'].apply(lambda x: unicode(str(x),"utf-8"))
     testingDF['question2'] = testingDF['question2'].apply(lambda x: unicode(str(x),"utf-8"))
 
-    # Split data into subsection for speed 
+    # Split data into subsection for speed
     testingDF = testingDF[:10]
     print testingDF
 
