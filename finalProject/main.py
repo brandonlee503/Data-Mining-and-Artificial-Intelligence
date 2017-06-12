@@ -15,10 +15,10 @@ from keras.models import model_from_json
 
 def main():
     # Seperate data and class values
-    train, test = getData()
+    trainModel()
 
 
-def getData():
+def trainModel():
     """
     A simple algorithm based off of word2vec
     Parse data in from CSV
@@ -32,17 +32,19 @@ def getData():
     testing = pd.read_csv('test.csv', quotechar='"', skipinitialspace=True)
 
     # Encode questions to unicode
-    print 'Encode to Unicode'
-    training['question1'] = training['question1'].apply(lambda x: unicode(str(x), "utf-8"))
-    training['question2'] = training['question2'].apply(lambda x: unicode(str(x), "utf-8"))
+    print 'Encode training data to Unicode'
+    training['question1'] = training['question1'].apply(lambda x: unicode(str(x),"utf-8"))
+    training['question2'] = training['question2'].apply(lambda x: unicode(str(x),"utf-8"))
 
-    #TODO: Encode Testing data
+    print 'Encode testing data to Unicode'
+    testing['question1'] = testing['question1'].apply(lambda x: unicode(str(x),"utf-8"))
+    testing['question2'] = testing['question2'].apply(lambda x: unicode(str(x),"utf-8"))
 
     if os.path.exists('1_df.pkl'):
         print 'Reading existing pickle'
         df = pd.read_pickle('1_df.pkl')
     else:
-        # Extract word2vec vectors
+        # Extract word2vec vectors, train GLOVE model
         import spacy
         print 'Loading spacy NLP'
         nlp = spacy.load('en')
@@ -62,77 +64,72 @@ def getData():
         foo = open('1_df.pkl', 'w')
         pd.to_pickle(training, '1_df.pkl')
         foo.close()
-        df = training
+        df = pd.read_pickle('1_df.pkl')
 
     ### CREATE TRAINING DATA
 
     # Shuffle
     df = df.reindex(np.random.permutation(df.index))
 
-    # set number of train and test instances
-    num_train = int(df.shape[0] * 0.88)
-    num_test = df.shape[0] - num_train
-    print("Number of training pairs: %i"%(num_train))
-    print("Number of testing pairs: %i"%(num_test))
+    # Get the total number of training and testing instances
+    totalTraining = int(df.shape[0] * 0.88)
+    totalTesting = df.shape[0] - totalTraining
+    print("Total training pairs: %i"%(totalTraining))
+    print("Total testing pairs: %i"%(totalTesting))
 
-    # init data data arrays
-    X_train = np.zeros([num_train, 2, 300])
-    X_test  = np.zeros([num_test, 2, 300])
-    Y_train = np.zeros([num_train])
-    Y_test = np.zeros([num_test])
+    # Initialize data arrays
+    xTrain = np.zeros([totalTraining, 2, 300])
+    xTest  = np.zeros([totalTesting, 2, 300])
+    yTrain = np.zeros([totalTraining])
+    yTest = np.zeros([totalTesting])
 
-    # format data
+    # Refactor data
     b = [a[None,:] for a in list(df['q1_features'].values)]
-    q1_feats = np.concatenate(b, axis=0)
+    q1_features = np.concatenate(b, axis=0)
 
     b = [a[None,:] for a in list(df['q2_features'].values)]
-    q2_feats = np.concatenate(b, axis=0)
+    q2_features = np.concatenate(b, axis=0)
 
-    # fill data arrays with features
-    X_train[:,0,:] = q1_feats[:num_train]
-    X_train[:,1,:] = q2_feats[:num_train]
-    Y_train = df[:num_train]['is_duplicate'].values
+    # Fill the data arrays with features
+    xTrain[:,0,:] = q1_features[:totalTraining]
+    xTrain[:,1,:] = q2_features[:totalTraining]
+    yTrain = df[:totalTraining]['is_duplicate'].values
 
-    X_test[:,0,:] = q1_feats[num_train:]
-    X_test[:,1,:] = q2_feats[num_train:]
-    Y_test = df[num_train:]['is_duplicate'].values
+    xTest[:,0,:] = q1_features[totalTraining:]
+    xTest[:,1,:] = q2_features[totalTraining:]
+    yTest = df[totalTraining:]['is_duplicate'].values
 
     del b
-    del q1_feats
-    del q2_feats
+    del q1_features
+    del q2_features
 
     ### TRAIN MODEL
     net = createNetwork(300)
 
-    # train
+    # Perform actual training with siamese network
     optimizer = SGD(lr=0.1, momentum=0.8, nesterov=True, decay=0.004)
-    #optimizer = RMSprop(lr=0.001)
 
     if os.path.exists('net_weights.h5'):
         net.load_weights('net_weights.h5')
         net.compile(loss=getContrastiveLoss, optimizer=optimizer)
 
-        pred = net.predict([X_test[:,0,:], X_test[:,1,:]])
-        te_acc = getAccuracy(pred, Y_test)
+        prediction = net.predict([xTest[:,0,:], xTest[:,1,:]])
+        testAccuracy = getAccuracy(prediction, yTest)
 
-        print('* Accuracy on test set: %0.2f%%' % (100 * te_acc))
+        print('*** Test Set Accuracy: %0.2f%%' % (100 * testAccuracy))
     else:
         net.compile(loss=getContrastiveLoss, optimizer=optimizer)
 
-        for epoch in range(1):
-            net.fit([X_train[:,0,:], X_train[:,1,:]], Y_train,
-                  validation_data=([X_test[:,0,:], X_test[:,1,:]], Y_test),
-                  batch_size=128, nb_epoch=1, shuffle=True)
+        for epoch in range(10):
+            net.fit([xTrain[:,0,:], xTrain[:,1,:]], yTrain, validation_data=([xTest[:,0,:], xTest[:,1,:]], yTest), batch_size=128, nb_epoch=1, shuffle=True)
 
             # compute final accuracy on training and test sets
-            pred = net.predict([X_test[:,0,:], X_test[:,1,:]])
-            te_acc = getAccuracy(pred, Y_test)
+            prediction = net.predict([xTest[:,0,:], xTest[:,1,:]])
+            testAccuracy = getAccuracy(prediction, yTest)
 
-            print('* Accuracy on test set: %0.2f%%' % (100 * te_acc))
+            print('*** Test Set Accuracy: %0.2f%%' % (100 * testAccuracy))
 
         net.save_weights('net_weights.h5')
-
-    return training.values, testing.values
 
 
 if __name__ == '__main__':

@@ -1,6 +1,7 @@
 # Brandon Lee / John Miller
 # References:
 # http://www.erogol.com/duplicate-question-detection-deep-learning/
+
 from __future__ import absolute_import
 from __future__ import print_function
 
@@ -26,40 +27,45 @@ def getOutputShape(shapes):
     return (shapeA[0], 1)
 
 
-def getContrastiveLoss(y_true, y_pred):
+def getContrastiveLoss(yTrue, yPred):
     '''
     Calculates Contrastive loss
     http://yann.lecun.com/exdb/publis/pdf/hadsell-chopra-lecun-06.pdf
     '''
     margin = 1
-    return K.mean(y_true * K.square(y_pred) + (1 - y_true) * K.square(K.maximum(margin - y_pred, 0)))
+    return K.mean(yTrue * K.square(yPred) + (1 - yTrue) * K.square(K.maximum(margin - yPred, 0)))
 
 
 def createSubNetwork(inputShape):
     '''
     Creates a base network for feature extraction.
+    Three layer network utilizing euclidean distance for measuring distance similaritiy
+    Batch normalize each layer, normalize the final feature vectors as it seems euclidean distances perform better with this
     '''
+
+    # Initialize layer 1
     input = Input(shape=(inputShape,))
     dense1 = Dense(128)(input)
     bn1 = BatchNormalization()(dense1)
     relu1 = Activation('relu')(bn1)
 
+    # Initialize layer 2
     dense2 = Dense(128)(relu1)
     bn2 = BatchNormalization()(dense2)
     res2 = merge([relu1, bn2], mode='sum')
     relu2 = Activation('relu')(res2)
 
+    # Initialize layer 3
     dense3 = Dense(128)(relu2)
     bn3 = BatchNormalization()(dense3)
     res3 = Merge(mode='sum')([relu2, bn3])
     relu3 = Activation('relu')(res3)
 
+    # Merge everything and normalize one final time
     feats = merge([relu3, relu2, relu1], mode='concat')
     bn4 = BatchNormalization()(feats)
 
-    model = Model(input=input, output=bn4)
-
-    return model
+    return Model(input=input, output=bn4)
 
 
 def getAccuracy(predictions, labels):
@@ -77,16 +83,13 @@ def createNetwork(inputShape):
     # Define network
     baseNetwork = createSubNetwork(inputShape)
 
-    input_a = Input(shape=(inputShape,))
-    input_b = Input(shape=(inputShape,))
+    inputA = Input(shape=(inputShape,))
+    inputB = Input(shape=(inputShape,))
 
-    # because we re-use the same instance `baseNetwork`,
-    # the weights of the network
-    # will be shared across the two branches
-    processed_a = baseNetwork(input_a)
-    processed_b = baseNetwork(input_b)
+    # As we reuse baseNetwork, the weights will be shared among both the branches
+    processedA = baseNetwork(inputA)
+    processedB = baseNetwork(inputB)
 
-    distance = Lambda(getDistance, output_shape=getOutputShape)([processed_a, processed_b])
-
-    model = Model(input=[input_a, input_b], output=distance)
-    return model
+    # Evaluate distance
+    distance = Lambda(getDistance, output_shape=getOutputShape)([processedA, processedB])
+    return Model(input=[inputA, inputB], output=distance)
