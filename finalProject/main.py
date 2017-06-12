@@ -96,6 +96,7 @@ def trainModel():
     xTest[:,1,:] = q2_features[totalTraining:]
     yTest = df[totalTraining:]['is_duplicate'].values
 
+    # Cleanup
     del b
     del q1_features
     del q2_features
@@ -144,8 +145,8 @@ def testModel():
     testingDF['question2'] = testingDF['question2'].apply(lambda x: unicode(str(x),"utf-8"))
 
     # Split data into subsection for speed
-    # testingDF = testingDF[:10]
-    # print testingDF
+    testingDF = testingDF[:100]
+    print testingDF
 
     # Testing GLOVE Model
     if os.path.exists('testModelGLOVE.pkl'):
@@ -173,6 +174,54 @@ def testModel():
         pd.to_pickle(testingDF, 'testModelGLOVE.pkl')
         foo.close()
         df = pd.read_pickle('testModelGLOVE.pkl')
+
+    # DATA REFACTORING
+
+    # Initialize necessary lists
+    totalTesting = df.shape[0]
+    xTest  = np.zeros([totalTesting, 2, 300])
+
+    b = [a[None,:] for a in list(df['q1_features'].values)]
+    q1_features = np.concatenate(b, axis=0)
+
+    b = [a[None,:] for a in list(df['q2_features'].values)]
+    q2_features = np.concatenate(b, axis=0)
+
+    # Fill the data arrays with features
+    print 'shapes:'
+    print xTest.shape
+    print q1_features.shape
+
+    xTest[totalTesting:,0,:] = q1_features[totalTesting:]
+    xTest[totalTesting:,1,:] = q2_features[totalTesting:]
+
+    # Cleanup
+    del b
+    del q1_features
+    del q2_features
+
+    # TEST MODEL
+    net = createNetwork(300)
+
+    # Perform actual training with siamese network
+    optimizer = Adam(lr=0.001)
+    net.load_weights('net_weights.h5')
+    net.compile(loss=getContrastiveLoss, optimizer=optimizer)
+
+    # Calculate prediction
+    print 'Predicting...'
+    predictions = net.predict([xTest[:,0,:], xTest[:,1,:]])
+    # print prediction
+
+    # Write predictions to file
+    fo = open('predictions.csv', 'w')
+    fo.write('test_id,is_duplicate\n')
+
+    for i, prediction in enumerate(predictions):
+        print prediction
+        fo.write('{0},{1}\n'.format(i, int(prediction[0])))
+
+    fo.close()
 
 if __name__ == '__main__':
     main()
