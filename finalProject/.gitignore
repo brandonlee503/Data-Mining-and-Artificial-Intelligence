@@ -5,3 +5,4 @@ train.csv
 glove
 pretrained_word_embeddings.py
 testlol.py
+net_weights.h5
