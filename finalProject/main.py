@@ -9,7 +9,7 @@ import pandas as pd
 import json
 
 from siamese import *
-from keras.optimizers import RMSprop, SGD
+from keras.optimizers import RMSprop, SGD, Adam
 
 from keras.models import model_from_json
 
@@ -104,7 +104,7 @@ def trainModel():
     net = createNetwork(300)
 
     # Perform actual training with siamese network
-    optimizer = SGD(lr=0.1, momentum=0.8, nesterov=True, decay=0.004)
+    optimizer = Adam(lr=0.001)
 
     if os.path.exists('net_weights.h5'):
         net.load_weights('net_weights.h5')
@@ -118,7 +118,8 @@ def trainModel():
     else:
         net.compile(loss=getContrastiveLoss, optimizer=optimizer)
 
-        for epoch in range(10):
+        for epoch in range(6):
+            print('Beginning epoch {0}'.format(epoch))
             net.fit([xTrain[:,0,:], xTrain[:,1,:]], yTrain, validation_data=([xTest[:,0,:], xTest[:,1,:]], yTest), batch_size=128, epochs=1, shuffle=True)
 
             # Calculate final accuracy of training and test sets
