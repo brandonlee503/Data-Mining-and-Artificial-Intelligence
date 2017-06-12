@@ -1,6 +1,6 @@
 test.csv
 train.csv
-1_df.pkl
+*.pkl
 20_newsgroup
 glove
 pretrained_word_embeddings.py
