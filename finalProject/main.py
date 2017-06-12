@@ -6,9 +6,12 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+import json
 
 from siamese import *
 from keras.optimizers import RMSprop, SGD
+
+from keras.models import model_from_json
 
 def main():
     # Seperate data and class values
@@ -104,18 +107,30 @@ def getData():
     # train
     optimizer = SGD(lr=0.1, momentum=0.8, nesterov=True, decay=0.004)
     #optimizer = RMSprop(lr=0.001)
-    net.compile(loss=getContrastiveLoss, optimizer=optimizer)
 
-    for epoch in range(10):
-        net.fit([X_train[:,0,:], X_train[:,1,:]], Y_train,
-              validation_data=([X_test[:,0,:], X_test[:,1,:]], Y_test),
-              batch_size=128, nb_epoch=1, shuffle=True)
+    if os.path.exists('net_weights.h5'):
+        net.load_weights('net_weights.h5')
+        net.compile(loss=getContrastiveLoss, optimizer=optimizer)
 
-        # compute final accuracy on training and test sets
         pred = net.predict([X_test[:,0,:], X_test[:,1,:]])
         te_acc = getAccuracy(pred, Y_test)
 
         print('* Accuracy on test set: %0.2f%%' % (100 * te_acc))
+    else:
+        net.compile(loss=getContrastiveLoss, optimizer=optimizer)
+
+        for epoch in range(1):
+            net.fit([X_train[:,0,:], X_train[:,1,:]], Y_train,
+                  validation_data=([X_test[:,0,:], X_test[:,1,:]], Y_test),
+                  batch_size=128, nb_epoch=1, shuffle=True)
+
+            # compute final accuracy on training and test sets
+            pred = net.predict([X_test[:,0,:], X_test[:,1,:]])
+            te_acc = getAccuracy(pred, Y_test)
+
+            print('* Accuracy on test set: %0.2f%%' % (100 * te_acc))
+
+        net.save_weights('net_weights.h5')
 
     return training.values, testing.values
 
