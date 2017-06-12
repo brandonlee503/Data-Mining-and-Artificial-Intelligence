@@ -144,8 +144,8 @@ def testModel():
     testingDF['question2'] = testingDF['question2'].apply(lambda x: unicode(str(x),"utf-8"))
 
     # Split data into subsection for speed
-    testingDF = testingDF[:10]
-    print testingDF
+    # testingDF = testingDF[:10]
+    # print testingDF
 
     # Testing GLOVE Model
     if os.path.exists('testModelGLOVE.pkl'):
