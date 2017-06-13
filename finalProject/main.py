@@ -7,6 +7,7 @@ import sys
 import numpy as np
 import pandas as pd
 import json
+import csv
 
 from siamese import *
 from keras.optimizers import RMSprop, SGD, Adam
@@ -16,7 +17,8 @@ from keras.models import model_from_json
 def main():
     # Seperate data and class values
     # trainModel()
-    testModel()
+    # testModel()
+    testModel2()
 
 
 def trainModel():
@@ -130,6 +132,100 @@ def trainModel():
             print('*** Test Set Accuracy: %0.2f%%' % (100 * testAccuracy))
 
         net.save_weights('net_weights.h5')
+
+
+def testModel2():
+    """
+    A simple algorithm based off of word2vec
+    Parse data in from CSV
+    Convert mean word2vec representations of questions
+    Train simple model for pairs and observe difference
+    """
+
+    # # Read in values
+    # print 'Training - Read in CSV values'
+    # trainingDF = pd.read_csv('train.csv', quotechar='"', skipinitialspace=True)
+    #
+    # # Encode questions to unicode
+    # print 'Training - Encode training data to Unicode'
+    # trainingDF['question1'] = trainingDF['question1'].apply(lambda x: unicode(str(x),"utf-8"))
+    # trainingDF['question2'] = trainingDF['question2'].apply(lambda x: unicode(str(x),"utf-8"))
+    #
+    # # Training GLOVE Model
+    # # Extract word2vec vectors, train GLOVE model
+    # import spacy
+    # print 'Training - Loading spacy NLP'
+    # nlp = spacy.load('en')
+    #
+    # print 'Training - Vectorizing 1'
+    # q1_vectors = [doc.vector for doc in nlp.pipe(trainingDF['question1'], n_threads=50)]
+    # q2_vectors = [doc.vector for doc in nlp.pipe(trainingDF['question2'], n_threads=50)]
+    #
+    # print 'Training - Vectorizing 2'
+    # q1_vectors = np.array(q1_vectors)
+    # q2_vectors = np.array(q2_vectors)
+    #
+    # trainingDF['q1_features'] = list(q1_vectors)
+    # trainingDF['q2_features'] = list(q2_vectors)
+    #
+    # # Save features
+    # foo = open('ayylmao.pkl', 'w')
+    # pd.to_pickle(trainingDF, 'ayylmao.pkl')
+    # foo.close()
+    # df = pd.read_pickle('ayylmao.pkl')
+    df = pd.read_pickle('testModelGLOVE.pkl')
+
+    ### CREATE TRAINING DATA
+
+    # Shuffle
+    df = df.reindex(np.random.permutation(df.index))
+
+    # Get the total number of training and testing instances
+    totalTraining = int(df.shape[0] * 0)
+    totalTesting = df.shape[0] - totalTraining
+    print("Total training pairs: %i"%(totalTraining))
+    print("Total testing pairs: %i"%(totalTesting))
+
+    # Initialize data arrays
+    xTrain = np.zeros([totalTraining, 2, 300])
+    xTest  = np.zeros([totalTesting, 2, 300])
+    yTrain = np.zeros([totalTraining])
+    yTest = np.zeros([totalTesting])
+
+    # Refactor data
+    b = [a[None,:] for a in list(df['q1_features'].values)]
+    q1_features = np.concatenate(b, axis=0)
+
+    b = [a[None,:] for a in list(df['q2_features'].values)]
+    q2_features = np.concatenate(b, axis=0)
+
+    xTest[:,0,:] = q1_features[totalTraining:]
+    xTest[:,1,:] = q2_features[totalTraining:]
+
+    # Cleanup
+    del b
+    del q1_features
+    del q2_features
+
+    ### TRAIN MODEL
+    net = createNetwork(300)
+
+    # Perform actual training with siamese network
+    optimizer = Adam(lr=0.001)
+
+    net.load_weights('net_weights.h5')
+    net.compile(loss=getContrastiveLoss, optimizer=optimizer)
+
+    # Calculate final accuracy of training and test sets
+    prediction = net.predict([xTest[:,0,:], xTest[:,1,:]])
+
+
+    with open('submission.csv', 'wb') as csvfile:
+        submissionW = csv.writer(csvfile, delimiter=',',
+                           quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        submissionW.writerow(['test_id', 'is_duplicate'])
+        for i, predict in enumerate(prediction):
+            submissionW.writerow([i, 0 if predict < 0.5 else 1])
 
 
 def testModel():
